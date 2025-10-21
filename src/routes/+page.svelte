@@ -1,6 +1,6 @@
 <script lang="ts">
 	let { data } = $props();
-	import "open-props/style";
+	import 'open-props/style';
 
 	function relativeTime(time: number | string, locale: string = 'en'): string {
 		// Ensure we’re working with a number
@@ -57,7 +57,7 @@
 		{@const comments = item.comments || 0}
 		{@const time = item.time}
 		{@const date = item.date}
-		
+
 		{@const link = `https://hw.leftium.com/#/item/${id}`}
 		{@const source = item.source?.replace(/^(www.)?/, '')}
 		{@const path = item.link
@@ -81,27 +81,42 @@
 </main>
 
 <style>
-	main {
-		a {
-			display: block;
-			color: inherit;
-			text-decoration: none;
+	a {
+		display: block;
+		color: inherit;
+		text-decoration: none;
+	}
 
-			d-metadata {
-				display: block;
-				margin-bottom: var(--size-2);
+	d-metadata {
+		display: block;
+		margin-bottom: var(--size-2);
+		font-size: var(--font-size-0);
+	}
 
-				font-size: var(--font-size-0);
+	s-url {
+		text-decoration: underline;
+		color: var(--url-color);
 
-				s-url {
-					color: blue;
-					text-decoration: underline;
-
-					s-path {
-						opacity: 0.6;
-					}
-				}
-			}
+		&:hover {
+			color: var(--url-hover-color);
 		}
+	}
+
+	a:visited s-url {
+		color: var(--url-visited-color);
+	}
+
+	s-path {
+		opacity: 0.6;
+
+		&:hover {
+			opacity: 1;
+		}
+	}
+
+	:root {
+		--url-color: light-dark(#0645ad, #4da3ff);
+		--url-visited-color: light-dark(#0b0080, #a58cff);
+		--url-hover-color: light-dark(#3366cc, #80c0ff);
 	}
 </style>

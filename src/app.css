@@ -1,0 +1,19 @@
+/* based on: https://www.swyx.io/css-100-bytes, https://thecascade.dev/article/least-amount-of-css */
+html {
+	color-scheme: light dark;
+
+	max-width: min(42.875em, 100% - 1em);
+	margin: auto;
+
+	font-family: system-ui;
+}
+
+a {
+	color: light-dark(#0645ad, #4da3ff);
+}
+a:visited {
+	color: light-dark(#0b0080, #a58cff);
+}
+a:hover {
+	color: light-dark(#3366cc, #80c0ff);
+}
