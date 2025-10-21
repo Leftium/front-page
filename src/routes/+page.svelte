@@ -87,15 +87,32 @@
 		text-decoration: none;
 	}
 
-	d-metadata {
+	d-title {
 		display: block;
+		line-height: 1.2;
+	}
+
+	d-metadata {
+		display: flex;
+		gap: 0.5ch;
 		margin-bottom: var(--size-2);
 		font-size: var(--font-size-0);
+	}
+
+	s-points,
+	s-comments,
+	s-date,
+	s-time {
+		white-space: nowrap;
 	}
 
 	s-url {
 		text-decoration: underline;
 		color: var(--url-color);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		min-width: 0;
 
 		&:hover {
 			color: var(--url-hover-color);
