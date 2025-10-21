@@ -100,7 +100,6 @@
 
 	s-index {
 		opacity: 0.6;
-		text-align: right;
 		font-size: var(--font-size-0);
 		grid-column: 2;
 		grid-row: 1 / 3;
@@ -117,8 +116,7 @@
 		line-height: 1.2;
 		grid-column: 1;
 		grid-row: 1;
-		padding: var(--size-2);
-		padding-bottom: 0;
+		padding: var(--size-2) var(--size-2) 0;
 		display: flex;
 		align-items: baseline;
 	}
@@ -130,8 +128,7 @@
 		grid-column: 1;
 		grid-row: 2;
 		min-width: 0;
-		padding: var(--size-2);
-		padding-top: 0;
+		padding: 0 var(--size-2) var(--size-2);
 	}
 
 	s-points,
@@ -150,17 +147,17 @@
 		min-width: 0;
 	}
 
-	a:hover s-url {
-		color: var(--url-hover-color);
-		text-decoration: underline;
-	}
-
 	a:visited s-url {
 		color: var(--url-visited-color);
 	}
 
 	s-path {
 		opacity: 0.6;
+	}
+
+	a:hover s-url {
+		color: var(--url-hover-color);
+		text-decoration: underline;
 	}
 
 	a:hover s-path {
