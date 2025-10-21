@@ -66,7 +66,7 @@
 			.replace(/\/$/, '')}
 
 		<a href={link}>
-			<d-title>{index+1}. {title}</d-title>
+			<d-title>{index + 1}. {title}</d-title>
 			<d-metadata>
 				<s-points>{points}⇧</s-points>
 				<s-comments>{comments}ⓒ</s-comments>
@@ -83,8 +83,19 @@
 <style>
 	a {
 		display: block;
+		padding: var(--size-2);
+		border-top: 1px solid #8888;
+
+
 		color: inherit;
 		text-decoration: none;
+	}
+
+	@media (min-width: 42.875em) {
+		a {
+			border-left: 1px solid  #8888;
+			border-right: 1px solid  #8888;
+		}
 	}
 
 	d-title {
@@ -95,7 +106,6 @@
 	d-metadata {
 		display: flex;
 		gap: 0.5ch;
-		margin-bottom: var(--size-2);
 		font-size: var(--font-size-0);
 	}
 

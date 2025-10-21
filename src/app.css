@@ -2,7 +2,7 @@
 html {
 	color-scheme: light dark;
 
-	max-width: min(42.875em, 100% - 1em);
+	max-width: min(42.875em, 100%);
 	margin: auto;
 
 	font-family: system-ui;
