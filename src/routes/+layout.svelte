@@ -14,9 +14,9 @@
 <style>
 	/* based on: https://www.swyx.io/css-100-bytes, https://thecascade.dev/article/least-amount-of-css */
 	:global(html) {
-		max-width: min(70ch, 100% - 1em);
+		max-width: min(42.875em, 100% - 1em);
 		margin: auto;
-		line-height: 1.75;
-		font-size: 1.25em;
+
+		font-family: system-ui;
 	}
 </style>
