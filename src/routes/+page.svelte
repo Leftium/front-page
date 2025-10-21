@@ -66,7 +66,8 @@
 			.replace(/\/$/, '')}
 
 		<a href={link}>
-			<d-title>{index + 1}. {title}</d-title>
+			<s-index>{index + 1}</s-index>
+			<d-title>{title}</d-title>
 			<d-metadata>
 				<s-points>{points}⇧</s-points>
 				<s-comments>{comments}ⓒ</s-comments>
@@ -82,10 +83,12 @@
 
 <style>
 	a {
-		display: block;
+		display: grid;
+		grid-template-columns: auto 1fr;
+		gap: 0 0.5ch;
+		align-items: baseline;
 		padding: var(--size-2);
 		border-top: 1px solid #8888;
-
 		color: inherit;
 		text-decoration: none;
 	}
@@ -97,8 +100,14 @@
 		}
 	}
 
+	s-index {
+		opacity: 0.6;
+		text-align: right;
+		line-height: 1.2;
+		font-size: var(--font-size-0);
+	}
+
 	d-title {
-		display: block;
 		line-height: 1.2;
 	}
 
@@ -106,6 +115,8 @@
 		display: flex;
 		gap: 0.5ch;
 		font-size: var(--font-size-0);
+		grid-column: 2;
+		min-width: 0;
 	}
 
 	s-points,
