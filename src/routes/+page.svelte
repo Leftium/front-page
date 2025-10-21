@@ -86,15 +86,14 @@
 		padding: var(--size-2);
 		border-top: 1px solid #8888;
 
-
 		color: inherit;
 		text-decoration: none;
 	}
 
 	@media (min-width: 42.875em) {
 		a {
-			border-left: 1px solid  #8888;
-			border-right: 1px solid  #8888;
+			border-left: 1px solid #8888;
+			border-right: 1px solid #8888;
 		}
 	}
 
@@ -117,16 +116,17 @@
 	}
 
 	s-url {
-		text-decoration: underline;
+		text-decoration: none;
 		color: var(--url-color);
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		min-width: 0;
+	}
 
-		&:hover {
-			color: var(--url-hover-color);
-		}
+	a:hover s-url {
+		color: var(--url-hover-color);
+		text-decoration: underline;
 	}
 
 	a:visited s-url {
