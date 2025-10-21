@@ -1,5 +1,6 @@
 <script lang="ts">
 	let { data } = $props();
+	import "open-props/style";
 
 	function relativeTime(time: number | string, locale: string = 'en'): string {
 		// Ensure we’re working with a number
@@ -66,15 +67,41 @@
 
 		<a href={link}>
 			<d-title>{title}</d-title>
-			<div>
-				<d-points>{points}⇧</d-points>
-				<d-comments>{comments}ⓒ</d-comments>
-				<d-date>{relativeTime(date)}</d-date>
-				<d-time>{relativeTime(time)}</d-time>
-				<d-url>{source}<s-path>{path}</s-path></d-url>
-			</div>
+			<d-metadata>
+				<s-points>{points}⇧</s-points>
+				<s-comments>{comments}ⓒ</s-comments>
+				<s-date>{relativeTime(date)}</s-date>
+				<s-time>{relativeTime(time)}</s-time>
+				<s-url>{source}<s-path>{path}</s-path></s-url>
+			</d-metadata>
 		</a>
 	{/each}
 
 	<pre>{JSON.stringify(data.json, null, 4)}</pre>
 </main>
+
+<style>
+	main {
+		a {
+			display: block;
+			color: inherit;
+			text-decoration: none;
+
+			d-metadata {
+				display: block;
+				margin-bottom: var(--size-2);
+
+				font-size: var(--font-size-0);
+
+				s-url {
+					color: blue;
+					text-decoration: underline;
+
+					s-path {
+						opacity: 0.6;
+					}
+				}
+			}
+		}
+	}
+</style>
