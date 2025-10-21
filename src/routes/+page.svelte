@@ -1,2 +1,5 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<script lang="ts">
+    let { data } = $props()
+</script>
+
+<pre>{JSON.stringify(data.json, null, 4)}</pre>
