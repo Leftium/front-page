@@ -48,7 +48,7 @@
 </script>
 
 <main>
-	{#each data.json as item (item.id)}
+	{#each data.json as item, index (item.id)}
 		{@const id = item.id}
 		{@const dead = item.dead}
 		{@const title = dead ? `DEAD` : item.link_text}
@@ -66,7 +66,7 @@
 			.replace(/\/$/, '')}
 
 		<a href={link}>
-			<d-title>{title}</d-title>
+			<d-title>{index+1}. {title}</d-title>
 			<d-metadata>
 				<s-points>{points}⇧</s-points>
 				<s-comments>{comments}ⓒ</s-comments>
