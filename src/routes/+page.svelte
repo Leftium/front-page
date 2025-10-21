@@ -161,10 +161,10 @@
 
 	s-path {
 		opacity: 0.6;
+	}
 
-		&:hover {
-			opacity: 1;
-		}
+	a:hover s-path {
+		opacity: 1;
 	}
 
 	:root {
