@@ -1,6 +1,6 @@
 <script lang="ts">
 	import favicon from '$lib/assets/favicon.svg';
-	import '@csstools/normalize.css';
+	import 'sanitize.css';
 
 	let { children } = $props();
 </script>
