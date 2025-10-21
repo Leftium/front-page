@@ -89,6 +89,10 @@
 		border-top: 1px solid #8888;
 		color: inherit;
 		text-decoration: none;
+
+		&:first-child {
+			border-top: none;
+		}
 	}
 
 	@media (min-width: 42.875em) {
