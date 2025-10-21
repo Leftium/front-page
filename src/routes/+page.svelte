@@ -66,8 +66,8 @@
 			.replace(/\/$/, '')}
 
 		<a href={link}>
-			<s-index>{index + 1}</s-index>
 			<d-title>{title}</d-title>
+			<s-index>{index + 1}</s-index>
 			<d-metadata>
 				<s-points>{points}⇧</s-points>
 				<s-comments>{comments}ⓒ</s-comments>
@@ -78,16 +78,14 @@
 		</a>
 	{/each}
 
-	<pre>{JSON.stringify(data.json, null, 4)}</pre>
+	<pre hidden>{JSON.stringify(data.json, null, 4)}</pre>
 </main>
 
 <style>
 	a {
 		display: grid;
-		grid-template-columns: auto 1fr;
-		gap: 0 0.5ch;
-		align-items: baseline;
-		padding: var(--size-2);
+		grid-template-columns: 1fr 3.5ch;
+		gap: 0;
 		border-top: 1px solid #8888;
 		color: inherit;
 		text-decoration: none;
@@ -103,20 +101,37 @@
 	s-index {
 		opacity: 0.6;
 		text-align: right;
-		line-height: 1.2;
 		font-size: var(--font-size-0);
+		grid-column: 2;
+		grid-row: 1 / 3;
+		font-variant-numeric: tabular-nums;
+		background: light-dark(#f5f5f5, #2a2a2a);
+		padding: var(--size-2);
+		align-self: stretch;
+		display: flex;
+		align-items: baseline;
+		justify-content: flex-end;
 	}
 
 	d-title {
 		line-height: 1.2;
+		grid-column: 1;
+		grid-row: 1;
+		padding: var(--size-2);
+		padding-bottom: 0;
+		display: flex;
+		align-items: baseline;
 	}
 
 	d-metadata {
 		display: flex;
 		gap: 0.5ch;
 		font-size: var(--font-size-0);
-		grid-column: 2;
+		grid-column: 1;
+		grid-row: 2;
 		min-width: 0;
+		padding: var(--size-2);
+		padding-top: 0;
 	}
 
 	s-points,
