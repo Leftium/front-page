@@ -65,62 +65,57 @@
 			.replace(source, '')
 			.replace(/\/$/, '')}
 
-		<a href={link}>
-			<d-title>{title}</d-title>
-			<s-index>{index + 1}</s-index>
-			<d-metadata>
-				<s-points>{points}⇧</s-points>
-				<s-comments>{comments}ⓒ</s-comments>
-				<s-date>{relativeTime(date)}</s-date>
-				<s-time>{relativeTime(time)}</s-time>
-				<s-url>{source}<s-path>{path}</s-path></s-url>
-			</d-metadata>
-		</a>
+		<d-item>
+			<a href={link}>
+				<d-title>{title}</d-title>
+				<d-metadata>
+					<s-points>{points}⇧</s-points>
+					<s-comments>{comments}ⓒ</s-comments>
+					<s-date>{relativeTime(date)}</s-date>
+					<s-time>{relativeTime(time)}</s-time>
+					<s-url>{source}<s-path>{path}</s-path></s-url>
+				</d-metadata>
+			</a>
+			<s-scroll
+				role="button"
+				tabindex="0"
+				onclick={(e) => {
+					e.preventDefault();
+					e.currentTarget.previousElementSibling?.scrollIntoView({
+						behavior: 'smooth',
+						block: 'start'
+					});
+				}}
+			>
+				<s-index>{index + 1}</s-index>
+			</s-scroll>
+		</d-item>
 	{/each}
 
 	<pre hidden>{JSON.stringify(data.json, null, 4)}</pre>
 </main>
 
 <style>
-	a {
+	d-item {
 		display: grid;
 		grid-template-columns: 1fr 3.5ch;
-		gap: 0;
-		padding: 0;
 		border-top: 1px solid #8888;
-		color: inherit;
-		text-decoration: none;
 
 		&:first-child {
 			border-top: none;
 		}
 	}
 
-	@media (min-width: 42.875em) {
-		a {
-			border-left: 1px solid #8888;
-			border-right: 1px solid #8888;
-		}
-	}
-
-	s-index {
-		display: flex;
-		grid-column: 2;
-		grid-row: 1 / 3;
-		padding: var(--size-2);
-		background: light-dark(#f5f5f5, #2a2a2a);
-		opacity: 0.6;
-		font-size: 15px;
-		font-variant-numeric: tabular-nums;
-		align-self: stretch;
-		align-items: baseline;
-		justify-content: flex-end;
+	a {
+		display: grid;
+		grid-column: 1;
+		min-width: 0;
+		color: inherit;
+		text-decoration: none;
 	}
 
 	d-title {
 		display: flex;
-		grid-column: 1;
-		grid-row: 1;
 		padding: var(--size-2) var(--size-2) 0;
 		font-weight: var(--font-weight-4);
 		line-height: 1.2;
@@ -129,8 +124,6 @@
 
 	d-metadata {
 		display: flex;
-		grid-column: 1;
-		grid-row: 2;
 		min-width: 0;
 		gap: 0.5ch;
 		padding: 0 var(--size-2) var(--size-2);
@@ -155,12 +148,34 @@
 		white-space: nowrap;
 	}
 
-	a:visited s-url {
-		color: var(--url-visited-color);
-	}
-
 	s-path {
 		opacity: 0.6;
+	}
+
+	s-scroll {
+		display: flex;
+		grid-column: 2;
+		grid-row: 1 / 3;
+		padding: var(--size-2);
+		background: light-dark(#f5f5f5, #2a2a2a);
+		cursor: pointer;
+		align-self: stretch;
+		align-items: baseline;
+		justify-content: flex-end;
+
+		&:hover {
+			background: light-dark(#e8e8e8, #353535);
+		}
+	}
+
+	s-index {
+		opacity: 0.6;
+		font-size: 15px;
+		font-variant-numeric: tabular-nums;
+	}
+
+	a:visited s-url {
+		color: var(--url-visited-color);
 	}
 
 	a:hover s-url {
@@ -170,6 +185,13 @@
 
 	a:hover s-path {
 		opacity: 1;
+	}
+
+	@media (min-width: 42.875em) {
+		d-item {
+			border-left: 1px solid #8888;
+			border-right: 1px solid #8888;
+		}
 	}
 
 	:root {
