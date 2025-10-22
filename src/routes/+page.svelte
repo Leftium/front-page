@@ -86,6 +86,7 @@
 		display: grid;
 		grid-template-columns: 1fr 3.5ch;
 		gap: 0;
+		padding: 0;
 		border-top: 1px solid #8888;
 		color: inherit;
 		text-decoration: none;
@@ -103,57 +104,55 @@
 	}
 
 	s-index {
-		opacity: 0.6;
+		display: flex;
 		grid-column: 2;
 		grid-row: 1 / 3;
-		background: light-dark(#f5f5f5, #2a2a2a);
 		padding: var(--size-2);
+		background: light-dark(#f5f5f5, #2a2a2a);
+		opacity: 0.6;
+		font-size: 15px;
+		font-variant-numeric: tabular-nums;
 		align-self: stretch;
-		display: flex;
 		align-items: baseline;
 		justify-content: flex-end;
-		font-variant-numeric: tabular-nums;
-		font-size: var(--font-size-1);
-		font-size: 15px;
 	}
 
 	d-title {
-		line-height: 1.2;
+		display: flex;
 		grid-column: 1;
 		grid-row: 1;
 		padding: var(--size-2) var(--size-2) 0;
-		display: flex;
-		align-items: baseline;
 		font-weight: var(--font-weight-4);
+		line-height: 1.2;
+		align-items: baseline;
 	}
 
 	d-metadata {
 		display: flex;
-		gap: 0.5ch;
 		grid-column: 1;
 		grid-row: 2;
 		min-width: 0;
+		gap: 0.5ch;
 		padding: 0 var(--size-2) var(--size-2);
-		font-weight: var(--font-weight-2);
-		font-size: var(--font-size-1);
 		font-size: 15px;
+		font-weight: var(--font-weight-2);
 	}
 
 	s-points,
 	s-comments,
 	s-date,
 	s-time {
-		white-space: nowrap;
 		font-variant-numeric: tabular-nums;
+		white-space: nowrap;
 	}
 
 	s-url {
-		text-decoration: none;
-		color: var(--url-color);
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
 		min-width: 0;
+		overflow: hidden;
+		color: var(--url-color);
+		text-decoration: none;
+		text-overflow: ellipsis;
+		white-space: nowrap;
 	}
 
 	a:visited s-url {
