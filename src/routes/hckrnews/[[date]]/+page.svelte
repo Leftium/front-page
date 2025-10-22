@@ -170,7 +170,7 @@
 	d-title {
 		display: flex;
 		padding: var(--size-2) var(--size-2) 0;
-		color: light-dark(black, white);
+		color: light-dark(#222222, #e5e5e5);
 		font-weight: var(--font-weight-4);
 		line-height: 1.2;
 		align-items: baseline;
@@ -185,7 +185,7 @@
 		min-width: 0;
 		gap: 0.5ch;
 		padding: 0 var(--size-2) var(--size-2);
-		color: light-dark(black, white);
+		color: light-dark(#222222, #e5e5e5);
 		font-size: 15px;
 		font-weight: var(--font-weight-2);
 	}
