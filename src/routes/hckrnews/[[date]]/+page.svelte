@@ -94,7 +94,9 @@
 						>{dead ? '?' : comments} {@render message()}</s-comments
 					>
 					<s-time>{relativeTime(time)}</s-time>
-					<s-date class:muted={dateDiffHours < 24}>+{timeDelta(time, date)}</s-date>
+					<s-date class:muted={dateDiffHours < 24} class:highlighted={dateDiffHours >= 24}
+						>+{timeDelta(time, date)}</s-date
+					>
 					<s-url>{source}<s-path>{path}</s-path></s-url>
 				</d-metadata>
 			</a>
@@ -271,6 +273,11 @@
 
 		&.muted {
 			opacity: 0.2;
+		}
+
+		&.highlighted {
+			color: #ff6600;
+			opacity: 0.8;
 		}
 	}
 
