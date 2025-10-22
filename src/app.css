@@ -13,8 +13,8 @@ a {
 	color: light-dark(#0645ad, #4da3ff);
 }
 a:visited {
-	color: light-dark(#0b0080, #a58cff);
+	color: light-dark(#0b0080, #9370db);
 }
 a:hover {
-	color: light-dark(#3366cc, #80c0ff);
+	color: light-dark(#3366cc, #6db3ff);
 }

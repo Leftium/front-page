@@ -315,7 +315,7 @@
 
 	:root {
 		--url-color: light-dark(#0645ad, #4da3ff);
-		--url-visited-color: light-dark(#0b0080, #a58cff);
-		--url-hover-color: light-dark(#3366cc, #80c0ff);
+		--url-visited-color: light-dark(#0b0080, #9370db);
+		--url-hover-color: light-dark(#3366cc, #6db3ff);
 	}
 </style>
