@@ -69,8 +69,8 @@
 			<a href={link}>
 				<d-title>{title}</d-title>
 				<d-metadata>
-					<s-points>{points}⇧</s-points>
-					<s-comments>{comments}ⓒ</s-comments>
+					<s-points class:high={points >= 100}>{points}⇧</s-points>
+					<s-comments class:high={comments >= 100}>{comments}ⓒ</s-comments>
 					<s-date>{relativeTime(date)}</s-date>
 					<s-time>{relativeTime(time)}</s-time>
 					<s-url>{source}<s-path>{path}</s-path></s-url>
@@ -136,13 +136,30 @@
 		font-weight: var(--font-weight-2);
 	}
 
-	s-points,
-	s-comments {
+	s-points {
 		width: 4ch;
 		flex-shrink: 0;
 		font-variant-numeric: tabular-nums;
 		text-align: right;
 		white-space: nowrap;
+
+		&.high {
+			color: #ff6600;
+			font-weight: var(--font-weight-4);
+		}
+	}
+
+	s-comments {
+		width: 5ch;
+		flex-shrink: 0;
+		font-variant-numeric: tabular-nums;
+		text-align: right;
+		white-space: nowrap;
+
+		&.high {
+			color: #ff6600;
+			font-weight: var(--font-weight-4);
+		}
 	}
 
 	s-date {
