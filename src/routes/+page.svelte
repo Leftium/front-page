@@ -69,7 +69,7 @@
 	{#each data.json as item, index (item.id)}
 		{@const id = item.id}
 		{@const dead = item.dead}
-		{@const title = item.link_text}
+		{@const title = dead ? 'DEAD' : item.link_text}
 
 		{@const points = item.points}
 		{@const comments = item.comments || 0}
