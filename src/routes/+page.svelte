@@ -72,7 +72,7 @@
 					<s-points>{points}⇧</s-points>
 					<s-comments>{comments}ⓒ</s-comments>
 					<s-date>{relativeTime(date)}</s-date>
-					<s-time>({relativeTime(time)})</s-time>
+					<s-time>{relativeTime(time)}</s-time>
 					<s-url>{source}<s-path>{path}</s-path></s-url>
 				</d-metadata>
 			</a>
@@ -154,9 +154,10 @@
 	}
 
 	s-time {
-		width: 4.5ch;
+		width: 4ch;
 		flex-shrink: 0;
 		font-variant-numeric: tabular-nums;
+		font-style: italic;
 		text-align: right;
 		white-space: nowrap;
 	}
