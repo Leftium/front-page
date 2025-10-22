@@ -69,7 +69,7 @@
 	{#each data.json as item, index (item.id)}
 		{@const id = item.id}
 		{@const dead = item.dead}
-		{@const title = dead ? `DEAD` : item.link_text}
+		{@const title = item.link_text}
 
 		{@const points = item.points}
 		{@const comments = item.comments || 0}
@@ -87,7 +87,7 @@
 
 		<d-item>
 			<a href={link}>
-				<d-title>{title}</d-title>
+				<d-title class:dead>{title}</d-title>
 				<d-metadata>
 					<s-points class:high={points >= 100}>{points} {@render upvote()}</s-points>
 					<s-comments class:high={comments >= 100}>{comments} {@render message()}</s-comments>
@@ -145,6 +145,10 @@
 		font-weight: var(--font-weight-4);
 		line-height: 1.2;
 		align-items: baseline;
+
+		&.dead {
+			opacity: 0.3;
+		}
 	}
 
 	d-metadata {
