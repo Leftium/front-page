@@ -25,6 +25,23 @@
 		const years = now.diff(then, 'year');
 		return `${years}y`;
 	}
+
+	function timeDelta(time1: number, time2: number): string {
+		const then = dayjs.unix(time1);
+		const later = dayjs.unix(time2);
+
+		const seconds = later.diff(then, 'second');
+		if (seconds < 60) return `${seconds}s`;
+
+		const minutes = later.diff(then, 'minute');
+		if (minutes < 60) return `${minutes}m`;
+
+		const hours = later.diff(then, 'hour');
+		if (hours < 24) return `${hours}h`;
+
+		const days = later.diff(then, 'day');
+		return `${days}d`;
+	}
 </script>
 
 {#snippet upvote()}
@@ -55,8 +72,7 @@
 		{@const comments = item.comments || 0}
 		{@const time = item.time}
 		{@const date = item.date}
-		{@const timeDiffDays = Math.abs(dayjs.unix(date).diff(dayjs.unix(time), 'day'))}
-		{@const showTime = timeDiffDays >= 1}
+		{@const dateDiffHours = dayjs.unix(date).diff(dayjs.unix(time), 'hour')}
 
 		{@const link = dead
 			? `https://news.ycombinator.com/item?id=${id}`
@@ -77,10 +93,8 @@
 					<s-comments class:high={comments >= 100} class:mid={comments >= 50 && comments < 100}
 						>{dead ? '?' : comments} {@render message()}</s-comments
 					>
-					<s-date>{relativeTime(date)}</s-date>
-					{#if showTime}
-						<s-time>+{timeDiffDays}d</s-time>
-					{/if}
+					<s-time>{relativeTime(time)}</s-time>
+					<s-date class:muted={dateDiffHours < 24}>+{timeDelta(time, date)}</s-date>
 					<s-url>{source}<s-path>{path}</s-path></s-url>
 				</d-metadata>
 			</a>
@@ -254,6 +268,10 @@
 		font-variant-numeric: tabular-nums;
 		text-align: right;
 		white-space: nowrap;
+
+		&.muted {
+			opacity: 0.2;
+		}
 	}
 
 	s-time {
