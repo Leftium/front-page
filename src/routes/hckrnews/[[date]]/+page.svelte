@@ -115,6 +115,15 @@
 		</d-item>
 	{/each}
 
+	<d-item class="more-link">
+		<a href="/hckrnews/{data.previousDate}">
+			<d-metadata>
+				<s-url>More... {data.previousDate}</s-url>
+			</d-metadata>
+		</a>
+		<s-scroll></s-scroll>
+	</d-item>
+
 	<pre hidden>{JSON.stringify(data.json, null, 4)}</pre>
 </main>
 
@@ -131,6 +140,22 @@
 
 		&:hover {
 			background: light-dark(#f5f5f0, #2d2d2d);
+		}
+
+		&.more-link a {
+			min-height: 3.5em;
+			align-items: center;
+		}
+
+		&.more-link d-metadata {
+			justify-content: center;
+			padding: var(--size-2);
+			font-size: inherit;
+			font-weight: var(--font-weight-4);
+		}
+
+		&.more-link s-url {
+			text-align: center;
 		}
 	}
 
