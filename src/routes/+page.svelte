@@ -47,6 +47,24 @@
 	console.log(relativeTime(1761010143)); // e.g. "in 1y" or "3m ago" depending on current date
 </script>
 
+{#snippet upvote()}
+	<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+		<path
+			fill="currentColor"
+			d="M4 14h4v7a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-7h4a1.001 1.001 0 0 0 .781-1.625l-8-10c-.381-.475-1.181-.475-1.562 0l-8 10A1.001 1.001 0 0 0 4 14"
+		/>
+	</svg>
+{/snippet}
+
+{#snippet message()}
+	<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+		<path
+			fill="currentColor"
+			d="M20 2H4c-1.103 0-2 .894-2 1.992v12.016C2 17.106 2.897 18 4 18h3v4l6.351-4H20c1.103 0 2-.894 2-1.992V3.992A2 2 0 0 0 20 2"
+		/>
+	</svg>
+{/snippet}
+
 <main>
 	{#each data.json as item, index (item.id)}
 		{@const id = item.id}
@@ -69,8 +87,8 @@
 			<a href={link}>
 				<d-title>{title}</d-title>
 				<d-metadata>
-					<s-points class:high={points >= 100}>{points}⇧</s-points>
-					<s-comments class:high={comments >= 100}>{comments}ⓒ</s-comments>
+					<s-points class:high={points >= 100}>{points} {@render upvote()}</s-points>
+					<s-comments class:high={comments >= 100}>{comments} {@render message()}</s-comments>
 					<s-date>{relativeTime(date)}</s-date>
 					<s-time>{relativeTime(time)}</s-time>
 					<s-url>{source}<s-path>{path}</s-path></s-url>
@@ -137,28 +155,58 @@
 	}
 
 	s-points {
-		width: 4ch;
+		display: flex;
+		gap: 0.25ch;
+		width: 5.25ch;
 		flex-shrink: 0;
 		font-variant-numeric: tabular-nums;
 		text-align: right;
 		white-space: nowrap;
+		align-items: center;
+		justify-content: flex-end;
+
+		svg {
+			width: 1em;
+			height: 1em;
+			flex-shrink: 0;
+			opacity: 0.5;
+		}
 
 		&.high {
 			color: #ff6600;
 			font-weight: var(--font-weight-4);
+
+			svg {
+				opacity: 1;
+			}
 		}
 	}
 
 	s-comments {
-		width: 5ch;
+		display: flex;
+		gap: 0.25ch;
+		width: 6.25ch;
 		flex-shrink: 0;
 		font-variant-numeric: tabular-nums;
 		text-align: right;
 		white-space: nowrap;
+		align-items: center;
+		justify-content: flex-end;
+
+		svg {
+			width: 1em;
+			height: 1em;
+			flex-shrink: 0;
+			opacity: 0.5;
+		}
 
 		&.high {
 			color: #ff6600;
 			font-weight: var(--font-weight-4);
+
+			svg {
+				opacity: 1;
+			}
 		}
 	}
 
