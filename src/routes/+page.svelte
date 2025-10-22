@@ -105,8 +105,6 @@
 				</d-metadata>
 			</a>
 			<s-scroll
-				role="button"
-				tabindex="0"
 				onclick={(e) => {
 					e.preventDefault();
 					e.currentTarget.previousElementSibling?.scrollIntoView({
