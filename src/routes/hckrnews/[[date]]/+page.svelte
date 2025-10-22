@@ -55,8 +55,8 @@
 		{@const comments = item.comments || 0}
 		{@const time = item.time}
 		{@const date = item.date}
-		{@const timeDiffHours = Math.abs((date - time) / 3600)}
-		{@const showTime = timeDiffHours >= 24}
+		{@const timeDiffDays = Math.abs(dayjs.unix(date).diff(dayjs.unix(time), 'day'))}
+		{@const showTime = timeDiffDays >= 1}
 
 		{@const link = dead
 			? `https://news.ycombinator.com/item?id=${id}`
@@ -79,7 +79,7 @@
 					>
 					<s-date>{relativeTime(date)}</s-date>
 					{#if showTime}
-						<s-time>{relativeTime(time)}</s-time>
+						<s-time>+{timeDiffDays}d</s-time>
 					{/if}
 					<s-url>{source}<s-path>{path}</s-path></s-url>
 				</d-metadata>
@@ -260,7 +260,6 @@
 		width: 4ch;
 		flex-shrink: 0;
 		font-variant-numeric: tabular-nums;
-		font-style: italic;
 		text-align: right;
 		white-space: nowrap;
 	}
