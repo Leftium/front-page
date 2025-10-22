@@ -133,9 +133,17 @@
 	}
 
 	s-points,
-	s-comments,
+	s-comments {
+		width: 4ch;
+		flex-shrink: 0;
+		font-variant-numeric: tabular-nums;
+		text-align: right;
+		white-space: nowrap;
+	}
+
 	s-date,
 	s-time {
+		flex-shrink: 0;
 		font-variant-numeric: tabular-nums;
 		white-space: nowrap;
 	}
