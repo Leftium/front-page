@@ -16,5 +16,5 @@ a:visited {
 	color: light-dark(#0b0080, #9370db);
 }
 a:hover {
-	color: light-dark(#3366cc, #6db3ff);
+	color: light-dark(#0645ad, #6db3ff);
 }
