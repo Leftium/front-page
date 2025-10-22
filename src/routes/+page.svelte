@@ -99,7 +99,8 @@
 	d-item {
 		display: grid;
 		grid-template-columns: 1fr 3.5ch;
-		border-top: 1px solid #8888;
+		background: light-dark(#ffffff, #262626);
+		border-top: 1px solid light-dark(#e6e6df, #3a3a3a);
 
 		&:first-child {
 			border-top: none;
@@ -157,14 +158,15 @@
 		grid-column: 2;
 		grid-row: 1 / 3;
 		padding: var(--size-2);
-		background: light-dark(#f5f5f5, #2a2a2a);
+		background: light-dark(#f5f5f0, #2f2f2f);
+		border-right: 1px solid light-dark(#e6e6df, #3a3a3a);
 		cursor: pointer;
 		align-self: stretch;
 		align-items: baseline;
 		justify-content: flex-end;
 
 		&:hover {
-			background: light-dark(#e8e8e8, #353535);
+			background: light-dark(#ebebdf, #3a3a3a);
 		}
 	}
 
@@ -189,8 +191,11 @@
 
 	@media (min-width: 42.875em) {
 		d-item {
-			border-left: 1px solid #8888;
-			border-right: 1px solid #8888;
+			border-left: 1px solid light-dark(#e6e6df, #3a3a3a);
+		}
+
+		s-scroll {
+			border-right: 1px solid light-dark(#e6e6df, #3a3a3a);
 		}
 	}
 
