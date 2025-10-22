@@ -22,7 +22,7 @@
 			[60, 'second'],
 			[60, 'minute'],
 			[24, 'hour'],
-			[7, 'day'],
+			[30.44, 'day'],
 			//[4.34524, 'week'],
 			[12, 'month'],
 			[Number.POSITIVE_INFINITY, 'year']
