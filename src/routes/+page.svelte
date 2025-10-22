@@ -171,7 +171,7 @@
 			width: 1em;
 			height: 1em;
 			flex-shrink: 0;
-			opacity: 0.5;
+			opacity: 0.3;
 		}
 
 		&.high {
@@ -199,7 +199,7 @@
 			width: 1em;
 			height: 1em;
 			flex-shrink: 0;
-			opacity: 0.5;
+			opacity: 0.3;
 		}
 
 		&.high {
