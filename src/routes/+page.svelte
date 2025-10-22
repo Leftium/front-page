@@ -94,7 +94,9 @@
 					<s-points class:high={points >= 100}>{points} {@render upvote()}</s-points>
 					<s-comments class:high={comments >= 100}>{comments} {@render message()}</s-comments>
 					<s-date>{relativeTime(date)}</s-date>
-					<s-time>{showTime ? relativeTime(time) : ''}</s-time>
+					{#if showTime}
+						<s-time>{relativeTime(time)}</s-time>
+					{/if}
 					<s-url>{source}<s-path>{path}</s-path></s-url>
 				</d-metadata>
 			</a>
