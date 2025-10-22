@@ -1,8 +1,8 @@
 <script lang="ts">
-	import favicon from '$lib/assets/favicon.svg';
+	import { favicon } from '@leftium/logo';
 	import 'sanitize.css';
-	
-	import '../app.css'
+
+	import '../app.css';
 
 	let { children } = $props();
 </script>
