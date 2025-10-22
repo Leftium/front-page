@@ -104,16 +104,17 @@
 
 	s-index {
 		opacity: 0.6;
-		font-size: var(--font-size-0);
 		grid-column: 2;
 		grid-row: 1 / 3;
-		font-variant-numeric: tabular-nums;
 		background: light-dark(#f5f5f5, #2a2a2a);
 		padding: var(--size-2);
 		align-self: stretch;
 		display: flex;
 		align-items: baseline;
 		justify-content: flex-end;
+		font-variant-numeric: tabular-nums;
+		font-size: var(--font-size-1);
+		font-size: 15px;
 	}
 
 	d-title {
@@ -123,16 +124,19 @@
 		padding: var(--size-2) var(--size-2) 0;
 		display: flex;
 		align-items: baseline;
+		font-weight: var(--font-weight-4);
 	}
 
 	d-metadata {
 		display: flex;
 		gap: 0.5ch;
-		font-size: var(--font-size-0);
 		grid-column: 1;
 		grid-row: 2;
 		min-width: 0;
 		padding: 0 var(--size-2) var(--size-2);
+		font-weight: var(--font-weight-2);
+		font-size: var(--font-size-1);
+		font-size: 15px;
 	}
 
 	s-points,
@@ -140,6 +144,7 @@
 	s-date,
 	s-time {
 		white-space: nowrap;
+		font-variant-numeric: tabular-nums;
 	}
 
 	s-url {
