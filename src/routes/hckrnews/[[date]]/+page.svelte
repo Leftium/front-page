@@ -42,9 +42,6 @@
 
 		return rtf.format(value, unit).replace(/ ago$/, '');
 	}
-
-	// Example usage:
-	console.log(relativeTime(1761010143)); // e.g. "in 1y" or "3m ago" depending on current date
 </script>
 
 {#snippet upvote()}
