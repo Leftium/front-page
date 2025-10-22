@@ -148,7 +148,7 @@
 	d-title {
 		display: flex;
 		padding: var(--size-2) var(--size-2) 0;
-		color: inherit;
+		color: light-dark(black, white);
 		font-weight: var(--font-weight-4);
 		line-height: 1.2;
 		align-items: baseline;
@@ -163,7 +163,7 @@
 		min-width: 0;
 		gap: 0.5ch;
 		padding: 0 var(--size-2) var(--size-2);
-		color: inherit;
+		color: light-dark(black, white);
 		font-size: 15px;
 		font-weight: var(--font-weight-2);
 	}
@@ -299,11 +299,6 @@
 	a:hover s-url {
 		color: var(--url-hover-color);
 		text-decoration: underline;
-	}
-
-	a:hover d-title,
-	a:hover d-metadata {
-		color: inherit;
 	}
 
 	a:hover s-path {
