@@ -189,6 +189,7 @@
 		&.mid {
 			svg {
 				color: #ff6600;
+				opacity: 0.5;
 			}
 		}
 
@@ -223,6 +224,7 @@
 		&.mid {
 			svg {
 				color: #ff6600;
+				opacity: 0.5;
 			}
 		}
 
