@@ -128,6 +128,10 @@
 </main>
 
 <style>
+	main {
+		box-shadow: var(--shadow-6);
+	}
+
 	d-item {
 		display: grid;
 		grid-template-columns: 1fr 3.5ch;
