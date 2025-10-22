@@ -40,7 +40,7 @@
 			unit = nextUnit;
 		}
 
-		return rtf.format(value, unit);
+		return rtf.format(value, unit).replace(/ ago$/, '');
 	}
 
 	// Example usage:
@@ -141,7 +141,14 @@
 		white-space: nowrap;
 	}
 
-	s-date,
+	s-date {
+		width: 4ch;
+		flex-shrink: 0;
+		font-variant-numeric: tabular-nums;
+		text-align: right;
+		white-space: nowrap;
+	}
+
 	s-time {
 		flex-shrink: 0;
 		font-variant-numeric: tabular-nums;
