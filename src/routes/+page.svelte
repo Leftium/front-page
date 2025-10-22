@@ -231,6 +231,7 @@
 		min-width: 0;
 		overflow: hidden;
 		color: var(--url-color);
+		font-weight: var(--font-weight-4);
 		text-decoration: none;
 		text-overflow: ellipsis;
 		white-space: nowrap;
