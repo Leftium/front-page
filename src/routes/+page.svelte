@@ -78,7 +78,9 @@
 		{@const timeDiffHours = Math.abs((date - time) / 3600)}
 		{@const showTime = timeDiffHours >= 24}
 
-		{@const link = `https://hw.leftium.com/#/item/${id}`}
+		{@const link = dead
+			? `https://news.ycombinator.com/item?id=${id}`
+			: `https://hw.leftium.com/#/item/${id}`}
 		{@const source = item.source?.replace(/^(www.)?/, '')}
 		{@const path = item.link
 			?.replace(/^https:\/\/(www.)?/, '')
