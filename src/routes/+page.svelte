@@ -91,8 +91,12 @@
 			<a href={link}>
 				<d-title class:dead>{title}</d-title>
 				<d-metadata>
-					<s-points class:high={points >= 100}>{points} {@render upvote()}</s-points>
-					<s-comments class:high={comments >= 100}>{comments} {@render message()}</s-comments>
+					<s-points class:high={points >= 100} class:mid={points >= 50 && points < 100}
+						>{points} {@render upvote()}</s-points
+					>
+					<s-comments class:high={comments >= 100} class:mid={comments >= 50 && comments < 100}
+						>{comments} {@render message()}</s-comments
+					>
 					<s-date>{relativeTime(date)}</s-date>
 					{#if showTime}
 						<s-time>{relativeTime(time)}</s-time>
@@ -182,6 +186,13 @@
 			opacity: 0.2;
 		}
 
+		&.mid {
+			svg {
+				color: #ff6600;
+				opacity: 1;
+			}
+		}
+
 		&.high {
 			color: #ff6600;
 			font-weight: var(--font-weight-4);
@@ -208,6 +219,13 @@
 			height: 1em;
 			flex-shrink: 0;
 			opacity: 0.2;
+		}
+
+		&.mid {
+			svg {
+				color: #ff6600;
+				opacity: 1;
+			}
 		}
 
 		&.high {
