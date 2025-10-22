@@ -75,6 +75,8 @@
 		{@const comments = item.comments || 0}
 		{@const time = item.time}
 		{@const date = item.date}
+		{@const timeDiffHours = Math.abs((date - time) / 3600)}
+		{@const showTime = timeDiffHours >= 24}
 
 		{@const link = `https://hw.leftium.com/#/item/${id}`}
 		{@const source = item.source?.replace(/^(www.)?/, '')}
@@ -90,7 +92,7 @@
 					<s-points class:high={points >= 100}>{points} {@render upvote()}</s-points>
 					<s-comments class:high={comments >= 100}>{comments} {@render message()}</s-comments>
 					<s-date>{relativeTime(date)}</s-date>
-					<s-time>{relativeTime(time)}</s-time>
+					<s-time>{showTime ? relativeTime(time) : ''}</s-time>
 					<s-url>{source}<s-path>{path}</s-path></s-url>
 				</d-metadata>
 			</a>
