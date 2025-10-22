@@ -105,6 +105,10 @@
 		&:first-child {
 			border-top: none;
 		}
+
+		&:hover {
+			background: light-dark(#f5f5f0, #2d2d2d);
+		}
 	}
 
 	a {
