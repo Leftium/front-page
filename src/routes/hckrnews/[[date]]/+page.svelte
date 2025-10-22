@@ -143,7 +143,7 @@
 		}
 
 		&:hover {
-			background: light-dark(#f5f5f0, #2d2d2d);
+			background: light-dark(rgb(245, 245, 245), #2d2d2d);
 		}
 
 		&.more-link a {
@@ -300,7 +300,7 @@
 		grid-column: 2;
 		grid-row: 1 / 3;
 		padding: var(--size-2);
-		background: light-dark(#f5f5f0, #2f2f2f);
+		background: light-dark(rgb(245, 245, 245), #2f2f2f);
 		border-right: 1px solid light-dark(#e6e6df, #3a3a3a);
 		cursor: pointer;
 		align-self: stretch;
@@ -308,7 +308,7 @@
 		justify-content: flex-end;
 
 		&:hover {
-			background: light-dark(#ebebdf, #3a3a3a);
+			background: light-dark(rgb(235, 235, 235), #3a3a3a);
 		}
 	}
 
