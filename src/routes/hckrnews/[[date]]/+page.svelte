@@ -1,46 +1,29 @@
 <script lang="ts">
 	let { data } = $props();
 	import 'open-props/style';
+	import dayjs from 'dayjs';
 
-	function relativeTime(time: number | string, locale: string = 'en'): string {
-		// Ensure we’re working with a number
+	function relativeTime(time: number | string): string {
 		const num = typeof time === 'string' ? parseInt(time, 10) : time;
-
-		// Convert seconds → ms if it looks like a Unix timestamp
 		const timestamp = num < 1e12 ? num * 1000 : num;
-		const now = Date.now();
-		const diff = timestamp - now;
 
-		const rtf = new Intl.RelativeTimeFormat(locale, {
-			style: 'narrow',
-			numeric: 'always'
-		});
+		const then = dayjs(timestamp);
+		const now = dayjs();
 
-		const seconds = Math.round(diff / 1000);
+		const minutes = now.diff(then, 'minute');
+		if (minutes < 60) return `${minutes}m`;
 
-		const divisions: [number, Intl.RelativeTimeFormatUnit][] = [
-			[60, 'second'],
-			[60, 'minute'],
-			[24, 'hour'],
-			[30.44, 'day'],
-			//[4.34524, 'week'],
-			[12, 'month'],
-			[Number.POSITIVE_INFINITY, 'year']
-		];
+		const hours = now.diff(then, 'hour');
+		if (hours < 24) return `${hours}h`;
 
-		let unit: Intl.RelativeTimeFormatUnit = 'second';
-		let value = seconds;
+		const days = now.diff(then, 'day');
+		if (days < 90) return `${days}d`;
 
-		for (const [amount, nextUnit] of divisions) {
-			if (Math.abs(value) < amount) {
-				unit = nextUnit;
-				break;
-			}
-			value = Math.round(value / amount);
-			unit = nextUnit;
-		}
+		const months = now.diff(then, 'month');
+		if (months < 12) return `${months}mo`;
 
-		return rtf.format(value, unit).replace(/ ago$/, '');
+		const years = now.diff(then, 'year');
+		return `${years}y`;
 	}
 </script>
 
@@ -102,9 +85,10 @@
 				</d-metadata>
 			</a>
 			<s-scroll
-				onclick={(e) => {
+				onclick={(e: MouseEvent) => {
 					e.preventDefault();
-					e.currentTarget.previousElementSibling?.scrollIntoView({
+					const target = e.currentTarget as HTMLElement;
+					target.previousElementSibling?.scrollIntoView({
 						behavior: 'smooth',
 						block: 'start'
 					});
