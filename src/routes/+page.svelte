@@ -301,6 +301,11 @@
 		text-decoration: underline;
 	}
 
+	a:hover d-title,
+	a:hover d-metadata {
+		color: inherit;
+	}
+
 	a:hover s-path {
 		opacity: 1;
 	}
