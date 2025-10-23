@@ -101,10 +101,8 @@
 		<d-item class="visit-info">
 			<a href="/hckrnews">
 				{#if data.visitData.lastVisit}
-					<d-title
-						>Last visit: {formatVisitTime(data.visitData.lastVisit)} ({relativeTimeVerbose(
-							data.visitData.lastVisit
-						)})</d-title
+					<d-title title={formatVisitTime(data.visitData.lastVisit)}
+						>Last visit: {relativeTimeVerbose(data.visitData.lastVisit)}</d-title
 					>
 				{:else}
 					<d-title>Last visit: First visit!</d-title>
