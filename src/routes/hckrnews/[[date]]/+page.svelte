@@ -108,7 +108,7 @@
 					<d-title>Last visit: First visit!</d-title>
 				{/if}
 				<d-metadata>
-					<s-url>Total visits: {data.visitData.total}</s-url>
+					<span>Total visits: {data.visitData.total}</span>
 				</d-metadata>
 			</a>
 			<s-scroll class="new"></s-scroll>
@@ -199,6 +199,12 @@
 
 		&:hover {
 			background: light-dark(rgb(245, 245, 245), #2d2d2d);
+		}
+
+		&.visit-info d-title,
+		&.visit-info d-metadata {
+			text-align: center;
+			justify-content: center;
 		}
 
 		&.more-link a {
