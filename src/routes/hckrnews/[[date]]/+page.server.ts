@@ -1,4 +1,25 @@
-export const load = async ({ fetch, params }) => {
+export const load = async ({ fetch, params, cookies, url }) => {
+	let visitData = null;
+
+	if (!params.date) {
+		const now = Math.floor(Date.now() / 1000);
+		const recentVisits = cookies.get('visits_recent');
+		const totalVisits = cookies.get('visits_total');
+
+		const recent = recentVisits ? recentVisits.split(',').map(Number) : [];
+		const lastVisit = recent.length > 0 ? recent[recent.length - 1] : null;
+
+		recent.push(now);
+		const trimmed = recent.slice(-20);
+
+		const total = totalVisits ? parseInt(totalVisits, 10) + 1 : 1;
+
+		cookies.set('visits_recent', trimmed.join(','), { path: '/', maxAge: 60 * 60 * 24 * 365 });
+		cookies.set('visits_total', total.toString(), { path: '/', maxAge: 60 * 60 * 24 * 365 });
+
+		visitData = { total, lastVisit };
+	}
+
 	const filename = params.date ? `${params.date.replace(/\./g, '')}.js` : 'latest.js';
 
 	const fetched = await fetch(`https://hckrnews.com/data/${filename}`);
@@ -6,21 +27,17 @@ export const load = async ({ fetch, params }) => {
 
 	const json = JSON.parse(texted.replace(/^var entries =/, ''));
 
-	// Calculate previous date in UTC
 	let prevDate;
 	if (params.date) {
-		// Use the page param date and subtract 1 day (UTC)
 		const [year, month, day] = params.date.split('.').map(Number);
-		prevDate = new Date(Date.UTC(year, month - 1, day)); // month is 0-indexed, create UTC date
+		prevDate = new Date(Date.UTC(year, month - 1, day));
 	} else {
-		// Use last item's date (Unix timestamps are UTC)
 		const lastItem = json[json.length - 1];
-		prevDate = new Date(lastItem.date * 1000); // Convert Unix timestamp (seconds) to Date
+		prevDate = new Date(lastItem.date * 1000);
 	}
-	prevDate.setUTCDate(prevDate.getUTCDate() - 1); // Subtract 1 day in UTC (handles month/year rollover)
+	prevDate.setUTCDate(prevDate.getUTCDate() - 1);
 
-	// Format as YYYY.MM.DD using UTC
 	const previousDate = `${prevDate.getUTCFullYear()}.${String(prevDate.getUTCMonth() + 1).padStart(2, '0')}.${String(prevDate.getUTCDate()).padStart(2, '0')}`;
 
-	return { json, previousDate };
+	return { json, previousDate, visitData };
 };

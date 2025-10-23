@@ -42,6 +42,40 @@
 		const days = later.diff(then, 'day');
 		return `${days}d`;
 	}
+
+	function formatVisitTime(timestamp: number): string {
+		const date = dayjs.unix(timestamp);
+		const hour = date.hour();
+		const ampm = hour >= 12 ? 'p' : 'a';
+		const hour12 = hour % 12 || 12;
+		return `${date.format('YYYY-MM-DD')} ${hour12}:${date.format('mm')}${ampm}`;
+	}
+
+	function relativeTimeVerbose(timestamp: number): string {
+		const then = dayjs.unix(timestamp);
+		const now = dayjs();
+
+		const minutes = now.diff(then, 'minute');
+		if (minutes < 1) return 'just now';
+		if (minutes === 1) return '1 minute ago';
+		if (minutes < 60) return `${minutes} minutes ago`;
+
+		const hours = now.diff(then, 'hour');
+		if (hours === 1) return '1 hour ago';
+		if (hours < 24) return `${hours} hours ago`;
+
+		const days = now.diff(then, 'day');
+		if (days === 1) return '1 day ago';
+		if (days < 30) return `${days} days ago`;
+
+		const months = now.diff(then, 'month');
+		if (months === 1) return '1 month ago';
+		if (months < 12) return `${months} months ago`;
+
+		const years = now.diff(then, 'year');
+		if (years === 1) return '1 year ago';
+		return `${years} years ago`;
+	}
 </script>
 
 {#snippet upvote()}
@@ -63,6 +97,26 @@
 {/snippet}
 
 <main>
+	{#if data.visitData}
+		<d-item class="visit-info">
+			<a href="/hckrnews">
+				{#if data.visitData.lastVisit}
+					<d-title
+						>Last visit: {formatVisitTime(data.visitData.lastVisit)} ({relativeTimeVerbose(
+							data.visitData.lastVisit
+						)})</d-title
+					>
+				{:else}
+					<d-title>Last visit: First visit!</d-title>
+				{/if}
+				<d-metadata>
+					<s-url>Total visits: {data.visitData.total}</s-url>
+				</d-metadata>
+			</a>
+			<s-scroll class="new"></s-scroll>
+		</d-item>
+	{/if}
+
 	{#each data.json as item, index (item.id)}
 		{@const id = item.id}
 		{@const dead = item.dead}
@@ -83,6 +137,8 @@
 			.replace(source, '')
 			.replace(/\/$/, '')}
 
+		{@const isNew = data.visitData?.lastVisit && date > data.visitData.lastVisit}
+
 		<d-item>
 			<a href={link}>
 				<d-title class:dead>{title}</d-title>
@@ -101,6 +157,7 @@
 				</d-metadata>
 			</a>
 			<s-scroll
+				class:new={isNew}
 				onclick={(e: MouseEvent) => {
 					e.preventDefault();
 					const target = e.currentTarget as HTMLElement;
@@ -317,6 +374,11 @@
 
 		&:hover {
 			background: light-dark(rgb(235, 235, 235), #3a3a3a);
+		}
+
+		&.new s-index {
+			color: #ff6600;
+			opacity: 1;
 		}
 	}
 
