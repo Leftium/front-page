@@ -21,27 +21,38 @@ export const load: PageServerLoad = async ({ fetch, params, cookies }) => {
 		const recent = recentVisits ? recentVisits.split('-').map(Number) : [];
 		const lastVisit = recent.length > 0 ? recent[recent.length - 1] : null;
 
-		const shouldRecordVisit = !lastVisit || now - lastVisit >= 30 * 60;
-
-		if (shouldRecordVisit) {
+		// Update or add visit based on time difference
+		if (!lastVisit) {
+			// First visit ever
 			recent.push(now);
-			const trimmed = recent.slice(-20);
-			cookies.set('visits_recent', trimmed.join('-'), { path: '/', maxAge: 60 * 60 * 24 * 365 });
+		} else {
+			const timeDiff = now - lastVisit;
+			if (timeDiff < 60 * 60) {
+				// Less than 60 minutes: update the most recent visit
+				recent[recent.length - 1] = now;
+			} else {
+				// 60+ minutes: add new visit
+				recent.push(now);
+			}
 		}
+
+		// Keep only the last 10 visits
+		const trimmed = recent.slice(-10);
+		cookies.set('visits_recent', trimmed.join('-'), { path: '/', maxAge: 60 * 60 * 24 * 365 });
 
 		const total = totalVisits ? parseInt(totalVisits, 10) + 1 : 1;
 		cookies.set('visits_total', total.toString(), { path: '/', maxAge: 60 * 60 * 24 * 365 });
 
 		// Automatic baseline: Use the previous visit (session-based detection)
-		// Manual baseline will be handled client-side via localStorage
-		const baseline = lastVisit;
+		// Manual baseline will be handled client-side via sessionStorage
+		const baseline = trimmed.length > 1 ? trimmed[trimmed.length - 2] : null;
 
-		visitData = { total, lastVisit, baseline, recentVisits: recent };
+		visitData = { total, lastVisit: now, baseline, recentVisits: trimmed };
 	} else {
 		const recent = recentVisits ? recentVisits.split('-').map(Number) : [];
 		const lastVisit = recent.length > 0 ? recent[recent.length - 1] : null;
 		const total = totalVisits ? parseInt(totalVisits, 10) : 0;
-		const baseline = lastVisit;
+		const baseline = recent.length > 1 ? recent[recent.length - 2] : null;
 
 		visitData = { total, lastVisit, baseline, recentVisits: recent };
 	}
