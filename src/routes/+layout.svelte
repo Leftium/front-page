@@ -94,7 +94,7 @@
 	}
 
 	footer {
-		background: light-dark(#f5f5f5, #1a1a1a);
+		background: light-dark(#e8e8e8, #1a1a1a);
 		border-top: 1px solid light-dark(#e6e6df, #3a3a3a);
 		padding: var(--size-6) var(--size-4);
 	}
