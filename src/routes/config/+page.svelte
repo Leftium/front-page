@@ -225,17 +225,16 @@
 	}
 
 	.radio-group-horizontal {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-		row-gap: var(--size-1);
-		column-gap: var(--size-3);
+		columns: 150px;
+		column-gap: var(--size-5);
 		margin-bottom: var(--size-2);
 	}
 
 	.radio-group-horizontal label {
-		display: inline-block;
-		margin-bottom: 0;
+		display: block;
+		margin-bottom: var(--size-1);
 		white-space: nowrap;
+		break-inside: avoid;
 	}
 
 	.pages-header {
