@@ -51,30 +51,25 @@
 		return `${date.format('YYYY-MM-DD')} ${hour12}:${date.format('mm')}${ampm}`;
 	}
 
-	function relativeTimeVerbose(timestamp: number): string {
+	function relativeTimeAbbrev(timestamp: number): string {
 		const then = dayjs.unix(timestamp);
 		const now = dayjs();
 
 		const minutes = now.diff(then, 'minute');
 		if (minutes < 1) return 'just now';
-		if (minutes === 1) return '1 minute ago';
-		if (minutes < 60) return `${minutes} minutes ago`;
+		if (minutes < 60) return `${minutes}m ago`;
 
 		const hours = now.diff(then, 'hour');
-		if (hours === 1) return '1 hour ago';
-		if (hours < 24) return `${hours} hours ago`;
+		if (hours < 24) return `${hours}h ago`;
 
 		const days = now.diff(then, 'day');
-		if (days === 1) return '1 day ago';
-		if (days < 30) return `${days} days ago`;
+		if (days < 30) return `${days}d ago`;
 
 		const months = now.diff(then, 'month');
-		if (months === 1) return '1 month ago';
-		if (months < 12) return `${months} months ago`;
+		if (months < 12) return `${months}mo ago`;
 
 		const years = now.diff(then, 'year');
-		if (years === 1) return '1 year ago';
-		return `${years} years ago`;
+		return `${years}y ago`;
 	}
 </script>
 
@@ -99,16 +94,17 @@
 <main>
 	{#if data.visitData}
 		<d-item class="visit-info new-item">
-			<a href="/hckrnews">
+			<a href="/config/visits">
 				{#if data.visitData.lastVisit}
 					<d-title title={formatVisitTime(data.visitData.lastVisit)}
-						>Last visit: {relativeTimeVerbose(data.visitData.lastVisit)}</d-title
+						>Last visit: {relativeTimeAbbrev(data.visitData.lastVisit)} (total: {data.visitData
+							.total})</d-title
 					>
 				{:else}
-					<d-title>Last visit: First visit!</d-title>
+					<d-title>Last visit: First visit! (total: {data.visitData.total})</d-title>
 				{/if}
 				<d-metadata>
-					<span>Total visits: {data.visitData.total}</span>
+					<s-url>Manage visits</s-url>
 				</d-metadata>
 			</a>
 			<s-scroll class="new"></s-scroll>
