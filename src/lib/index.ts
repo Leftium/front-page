@@ -23,11 +23,11 @@ export const FEED_SOURCES = [
 	{ id: 'ask', name: 'Ask HN', category: 'Hacker News', available: true },
 	{ id: 'show', name: 'Show HN', category: 'Hacker News', available: true },
 	{ id: 'jobs', name: 'Jobs', category: 'Hacker News', available: true },
-	{ id: 'shownew', name: 'Show New', category: 'More lists', available: false },
+	{ id: 'shownew', name: 'Show New', category: 'More lists', available: true },
 	{ id: 'active', name: 'Active', category: 'More lists', available: false },
 	{ id: 'bestcomments', name: 'Best Comments', category: 'More lists', available: false },
-	{ id: 'noobstories', name: 'Noob Stories', category: 'More lists', available: false },
-	{ id: 'pool', name: 'Pool', category: 'More lists', available: false },
-	{ id: 'classic', name: 'Classic', category: 'More lists', available: false },
-	{ id: 'launches', name: 'Launches', category: 'More lists', available: false }
+	{ id: 'noobstories', name: 'Noob Stories', category: 'More lists', available: true },
+	{ id: 'pool', name: 'Pool', category: 'More lists', available: true },
+	{ id: 'classic', name: 'Classic', category: 'More lists', available: true },
+	{ id: 'launches', name: 'Launches', category: 'More lists', available: true }
 ];

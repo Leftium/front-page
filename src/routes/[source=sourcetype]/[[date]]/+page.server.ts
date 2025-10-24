@@ -77,6 +77,12 @@ export const load: PageServerLoad = async ({ fetch, params, cookies }) => {
 		const apiResult = await fetchHNApi(fetch, source, startPage, endPage);
 		result = apiResult.stories;
 		nextRange = apiResult.nextRange;
+	} else if (['shownew', 'noobstories', 'pool', 'classic', 'launches'].includes(source)) {
+		// Scraped feeds don't support pagination currently
+		// They only show the first 30 items from the page
+		const hnResult = await fetchHN(fetch, source);
+		result = hnResult.stories;
+		nextRange = hnResult.nextRange;
 	} else {
 		const hnResult = await fetchHN(fetch, source);
 		result = hnResult.stories;
