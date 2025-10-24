@@ -155,7 +155,7 @@
 <main>
 	<d-item class="config-info new-item">
 		<a href="/config?from={data.source}">
-			<d-title>List: {FEED_NAMES[data.source]}</d-title>
+			<d-title><strong>List: {FEED_NAMES[data.source]}</strong></d-title>
 			{#if data.visitData}
 				<d-metadata>
 					{#if data.visitData.baseline}
