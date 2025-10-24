@@ -183,7 +183,8 @@
 	{/if}
 
 	{#each data.stories as story, index (story.id)}
-		{@render storyItem(story, index, data.visitData?.baseline ?? null)}
+		{@const globalIndex = (data.currentPage - 1) * 30 + index}
+		{@render storyItem(story, globalIndex, data.visitData?.baseline ?? null)}
 	{/each}
 
 	{#if data.previousDate || data.nextPage}
@@ -211,7 +212,7 @@
 <style>
 	d-item {
 		display: grid;
-		grid-template-columns: 1fr 3.5ch;
+		grid-template-columns: 1fr 4ch;
 		background: light-dark(#ffffff, #262626);
 		border-top: 1px solid light-dark(#e6e6df, #3a3a3a);
 		border-left: 4px solid light-dark(#ffffff, #262626);

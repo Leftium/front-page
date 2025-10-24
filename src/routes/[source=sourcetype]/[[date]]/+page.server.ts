@@ -53,6 +53,7 @@ export const load: PageServerLoad = async ({ fetch, params, cookies }) => {
 	let result;
 	let previousDate: string | undefined;
 	let nextPage: number | undefined;
+	let currentPage = 1;
 
 	if (source === 'hckrnews') {
 		const hckrResult = await fetchHckrnews(fetch, date);
@@ -60,6 +61,7 @@ export const load: PageServerLoad = async ({ fetch, params, cookies }) => {
 		previousDate = hckrResult.previousDate;
 	} else if (['top', 'new', 'best', 'ask', 'show', 'jobs'].includes(source)) {
 		const page = date ? parseInt(date, 10) : 1;
+		currentPage = page;
 		const apiResult = await fetchHNApi(fetch, source, page);
 		result = apiResult.stories;
 		nextPage = apiResult.nextPage;
@@ -72,6 +74,7 @@ export const load: PageServerLoad = async ({ fetch, params, cookies }) => {
 		stories: result,
 		previousDate,
 		nextPage,
+		currentPage,
 		visitData,
 		source
 	};
