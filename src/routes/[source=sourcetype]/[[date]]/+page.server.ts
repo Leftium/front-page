@@ -52,19 +52,28 @@ export const load: PageServerLoad = async ({ fetch, params, cookies }) => {
 
 	let result;
 	let previousDate: string | undefined;
-	let nextPage: number | undefined;
-	let currentPage = 1;
+	let nextRange: string | undefined;
+	let startPage = 1;
+	let endPage = 3;
 
 	if (source === 'hckrnews') {
 		const hckrResult = await fetchHckrnews(fetch, date);
 		result = hckrResult.stories;
 		previousDate = hckrResult.previousDate;
 	} else if (['top', 'new', 'best', 'ask', 'show', 'jobs'].includes(source)) {
-		const page = date ? parseInt(date, 10) : 1;
-		currentPage = page;
-		const apiResult = await fetchHNApi(fetch, source, page);
+		if (date) {
+			if (date.includes(':')) {
+				const [start, end] = date.split(':').map(Number);
+				startPage = start;
+				endPage = end;
+			} else if (/^\d+$/.test(date)) {
+				startPage = endPage = parseInt(date, 10);
+			}
+		}
+
+		const apiResult = await fetchHNApi(fetch, source, startPage, endPage);
 		result = apiResult.stories;
-		nextPage = apiResult.nextPage;
+		nextRange = apiResult.nextRange;
 	} else {
 		const hnResult = await fetchHN(fetch, source);
 		result = hnResult.stories;
@@ -73,8 +82,9 @@ export const load: PageServerLoad = async ({ fetch, params, cookies }) => {
 	return {
 		stories: result,
 		previousDate,
-		nextPage,
-		currentPage,
+		nextRange,
+		startPage,
+		endPage,
 		visitData,
 		source
 	};

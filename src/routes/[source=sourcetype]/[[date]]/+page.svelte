@@ -183,11 +183,11 @@
 	{/if}
 
 	{#each data.stories as story, index (story.id)}
-		{@const globalIndex = (data.currentPage - 1) * 30 + index}
+		{@const globalIndex = (data.startPage - 1) * 30 + index}
 		{@render storyItem(story, globalIndex, data.visitData?.baseline ?? null)}
 	{/each}
 
-	{#if data.previousDate || data.nextPage}
+	{#if data.previousDate || data.nextRange}
 		<d-item class="more-link">
 			{#if data.previousDate}
 				<a href="/{data.source}/{data.previousDate}">
@@ -195,8 +195,8 @@
 						<s-url>More... {data.previousDate}</s-url>
 					</d-metadata>
 				</a>
-			{:else if data.nextPage}
-				<a href="/{data.source}/{data.nextPage}">
+			{:else if data.nextRange}
+				<a href="/{data.source}/{data.nextRange}">
 					<d-metadata>
 						<s-url>More...</s-url>
 					</d-metadata>

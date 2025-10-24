@@ -27,8 +27,9 @@ const ITEMS_PER_PAGE = 30;
 export async function fetchHNApi(
 	fetchFn: typeof fetch,
 	source: string,
-	page: number = 1
-): Promise<{ stories: NormalizedStory[]; nextPage?: number }> {
+	startPage: number = 1,
+	endPage: number = 1
+): Promise<{ stories: NormalizedStory[]; nextRange?: string }> {
 	const endpoint = ENDPOINTS[source];
 	if (!endpoint) {
 		throw new Error(`Unknown HN API source: ${source}`);
@@ -37,11 +38,11 @@ export async function fetchHNApi(
 	const idsResponse = await fetchFn(endpoint);
 	const ids: number[] = await idsResponse.json();
 
-	const offset = (page - 1) * ITEMS_PER_PAGE;
-	const topIds = ids.slice(offset, offset + ITEMS_PER_PAGE);
-	const hasMore = offset + ITEMS_PER_PAGE < ids.length;
+	const startOffset = (startPage - 1) * ITEMS_PER_PAGE;
+	const endOffset = endPage * ITEMS_PER_PAGE;
+	const itemIds = ids.slice(startOffset, endOffset);
 
-	const itemPromises = topIds.map(async (id) => {
+	const itemPromises = itemIds.map(async (id) => {
 		const response = await fetchFn(`https://hacker-news.firebaseio.com/v0/item/${id}.json`);
 		return response.json() as Promise<HNItem>;
 	});
@@ -76,8 +77,13 @@ export async function fetchHNApi(
 			};
 		});
 
+	const pageCount = endPage - startPage + 1;
+	const nextStart = endPage + 1;
+	const nextEnd = nextStart + pageCount - 1;
+	const hasMore = endOffset < ids.length;
+
 	return {
 		stories,
-		nextPage: hasMore ? page + 1 : undefined
+		nextRange: hasMore ? `${nextStart}:${nextEnd}` : undefined
 	};
 }
