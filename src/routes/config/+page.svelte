@@ -160,7 +160,10 @@
 					type="radio"
 					name="baseline_display"
 					value={visit}
-					onchange={() => setDatetimeFromVisit(visit)}
+					onchange={() => {
+						setDatetimeFromVisit(visit);
+						autoSubmit();
+					}}
 				/>
 				{date}
 				{#if needsGhost}<span class="ghost">0</span>{/if}{time} <span class="ago">({relTime})</span>
