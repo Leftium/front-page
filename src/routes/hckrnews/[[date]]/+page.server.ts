@@ -1,10 +1,11 @@
 export const load = async ({ fetch, params, cookies, url }) => {
+	const recentVisits = cookies.get('visits_recent');
+	const totalVisits = cookies.get('visits_total');
+
 	let visitData = null;
 
 	if (!params.date) {
 		const now = Math.floor(Date.now() / 1000);
-		const recentVisits = cookies.get('visits_recent');
-		const totalVisits = cookies.get('visits_total');
 
 		const recent = recentVisits ? recentVisits.split(',').map(Number) : [];
 		const lastVisit = recent.length > 0 ? recent[recent.length - 1] : null;
@@ -16,6 +17,12 @@ export const load = async ({ fetch, params, cookies, url }) => {
 
 		cookies.set('visits_recent', trimmed.join(','), { path: '/', maxAge: 60 * 60 * 24 * 365 });
 		cookies.set('visits_total', total.toString(), { path: '/', maxAge: 60 * 60 * 24 * 365 });
+
+		visitData = { total, lastVisit };
+	} else {
+		const recent = recentVisits ? recentVisits.split(',').map(Number) : [];
+		const lastVisit = recent.length > 0 ? recent[recent.length - 1] : null;
+		const total = totalVisits ? parseInt(totalVisits, 10) : 0;
 
 		visitData = { total, lastVisit };
 	}

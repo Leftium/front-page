@@ -98,7 +98,7 @@
 
 <main>
 	{#if data.visitData}
-		<d-item class="visit-info">
+		<d-item class="visit-info new-item">
 			<a href="/hckrnews">
 				{#if data.visitData.lastVisit}
 					<d-title title={formatVisitTime(data.visitData.lastVisit)}
@@ -137,7 +137,7 @@
 
 		{@const isNew = data.visitData?.lastVisit && date > data.visitData.lastVisit}
 
-		<d-item>
+		<d-item class:new-item={isNew}>
 			<a href={link}>
 				<d-title class:dead>{title}</d-title>
 				<d-metadata>
@@ -199,6 +199,10 @@
 
 		&:hover {
 			background: light-dark(rgb(245, 245, 245), #2d2d2d);
+		}
+
+		&.new-item {
+			border-left: 4px solid rgba(255, 102, 0, 0.8);
 		}
 
 		&.visit-info d-title,
