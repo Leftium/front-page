@@ -95,7 +95,7 @@
 			{#if category !== 'Curated'}
 				<h3>
 					{category}
-					{#if category === 'More Lists'}
+					{#if category === 'More lists'}
 						<span class="coming-soon">(coming soon)</span>
 					{/if}
 				</h3>
@@ -120,7 +120,7 @@
 		<hr />
 
 		<div class="pages-header">
-			<h2>Items Per Page</h2>
+			<h2>Items per page</h2>
 			<div class="radio-group-inline">
 				{#each [1, 2, 3, 4] as pages}
 					<label>
@@ -138,7 +138,7 @@
 		</div>
 
 		<h2>
-			Last Visit <span class="subheader">(determines new item highlighting)</span>
+			Last visit <span class="subheader">(determines new item highlighting)</span>
 		</h2>
 
 		<input
@@ -149,7 +149,7 @@
 			onchange={autoSubmit}
 		/>
 
-		<h3>Recent Visits</h3>
+		<h3>Recent visits</h3>
 		{#each uniqueVisits as visit}
 			{@const [date, time] = formatVisitTime(visit).split(' ')}
 			{@const hourDigits = time.split(':')[0]}
