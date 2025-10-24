@@ -99,10 +99,17 @@ export const load: PageServerLoad = async ({ fetch, params, cookies }) => {
 			}
 		}
 
-		const hnResult = await fetchHN(fetch, source, startId, pageCount, itemIndex);
+		if (source === 'classic' && startId) {
+			const pageNum = parseInt(startId, 10);
+			startIndex = (pageNum - 1) * 30;
+		} else {
+			startIndex = itemIndex;
+		}
+
+		const hnResult = await fetchHN(fetch, source, startId, pageCount, startIndex);
 		result = hnResult.stories;
 		nextRange = hnResult.nextRange;
-		startIndex = itemIndex;
+		startIndex = source === 'classic' ? startIndex : itemIndex;
 	} else {
 		const hnResult = await fetchHN(fetch, source);
 		result = hnResult.stories;
