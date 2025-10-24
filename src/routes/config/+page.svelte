@@ -2,10 +2,18 @@
 	import dayjs from 'dayjs';
 	import { FEED_SOURCES } from '$lib';
 	import 'open-props/style';
+	import { browser } from '$app/environment';
 
 	let { data } = $props();
 
 	const currentSource = data?.source || 'hckrnews';
+
+	// Get manual baseline from sessionStorage if set
+	let manualBaseline = $state<number | null>(null);
+	if (browser) {
+		const stored = sessionStorage.getItem('manual_baseline');
+		manualBaseline = stored ? parseInt(stored, 10) : null;
+	}
 
 	let formElement: HTMLFormElement;
 	let datetimeInput: HTMLInputElement;
@@ -69,6 +77,23 @@
 		if (datetimeInput) {
 			datetimeInput.value = dayjs.unix(timestamp).format('YYYY-MM-DDTHH:mm');
 		}
+	}
+
+	function setManualBaseline(timestamp: number | null) {
+		if (browser) {
+			if (timestamp) {
+				sessionStorage.setItem('manual_baseline', timestamp.toString());
+			} else {
+				sessionStorage.removeItem('manual_baseline');
+			}
+			manualBaseline = timestamp;
+		}
+	}
+
+	function clearManualBaseline() {
+		setManualBaseline(null);
+		// Reload to show automatic baseline
+		window.location.reload();
 	}
 
 	if (typeof document !== 'undefined') {
@@ -138,18 +163,29 @@
 			Last visit <span class="subheader">(determines new item highlighting)</span>
 		</h2>
 
+		{#if manualBaseline}
+			<div class="manual-baseline-info">
+				<span
+					>Manual baseline set: {formatVisitTime(manualBaseline)} ({relativeTimeAbbrev(
+						manualBaseline
+					)})</span
+				>
+				<button type="button" onclick={clearManualBaseline}>Clear (use automatic)</button>
+			</div>
+		{:else}
+			<div class="manual-baseline-info">
+				<span>Using automatic baseline (previous visit)</span>
+			</div>
+		{/if}
+
 		<input
 			bind:this={datetimeInput}
 			type="datetime-local"
 			name="custom_datetime"
 			value={defaultDatetime}
 			onchange={() => {
-				// Add a hidden field to indicate datetime was explicitly changed
-				const hiddenInput = document.createElement('input');
-				hiddenInput.type = 'hidden';
-				hiddenInput.name = 'datetime_changed';
-				hiddenInput.value = 'true';
-				formElement.appendChild(hiddenInput);
+				const timestamp = Math.floor(new Date(datetimeInput.value).getTime() / 1000);
+				setManualBaseline(timestamp);
 				autoSubmit();
 			}}
 		/>
@@ -165,8 +201,10 @@
 					type="radio"
 					name="baseline_display"
 					value={visit}
+					checked={manualBaseline === visit}
 					onchange={() => {
 						setDatetimeFromVisit(visit);
+						setManualBaseline(visit);
 						autoSubmit();
 					}}
 				/>
@@ -317,5 +355,21 @@
 
 	:global(.js-enabled) .no-js-only {
 		display: none;
+	}
+
+	.manual-baseline-info {
+		display: flex;
+		align-items: center;
+		gap: var(--size-3);
+		margin-bottom: var(--size-3);
+		padding: var(--size-2) var(--size-3);
+		background: light-dark(#f5f5f5, #1a1a1a);
+		border: 1px solid light-dark(#ddd, #333);
+		border-radius: 6px;
+	}
+
+	.manual-baseline-info button {
+		padding: var(--size-1) var(--size-2);
+		font-size: var(--font-size-0);
 	}
 </style>

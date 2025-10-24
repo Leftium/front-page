@@ -4,6 +4,18 @@
 	let { data } = $props();
 	import 'open-props/style';
 	import dayjs from 'dayjs';
+	import { browser } from '$app/environment';
+
+	// Client-side baseline management
+	let actualBaseline = $state(data.visitData?.baseline ?? null);
+
+	if (browser) {
+		// Check for manual baseline override in sessionStorage
+		const manualBaseline = sessionStorage.getItem('manual_baseline');
+		if (manualBaseline) {
+			actualBaseline = parseInt(manualBaseline, 10);
+		}
+	}
 
 	function relativeTime(time: number | string): string {
 		const num = typeof time === 'string' ? parseInt(time, 10) : time;
@@ -115,7 +127,8 @@
 		.replace(domain || '', '')
 		.replace(/\/$/, '')}
 
-	{@const isNew = baseline && (timeFrontpage ? timeFrontpage > baseline : time > baseline)}
+	{@const isNew =
+		actualBaseline && (timeFrontpage ? timeFrontpage > actualBaseline : time > actualBaseline)}
 
 	<d-item class:new-item={isNew}>
 		<a href={link}>
@@ -158,9 +171,9 @@
 			<d-title><strong>List: {FEED_NAMES[data.source]}</strong></d-title>
 			{#if data.visitData}
 				<d-metadata>
-					{#if data.visitData.baseline}
-						<span title={formatVisitTime(data.visitData.baseline)}
-							>Last visit: {relativeTimeAbbrev(data.visitData.baseline)} (total: {data.visitData
+					{#if actualBaseline}
+						<span title={formatVisitTime(actualBaseline)}
+							>Last visit: {relativeTimeAbbrev(actualBaseline)} (total: {data.visitData
 								.total})</span
 						>
 					{:else}
@@ -182,7 +195,7 @@
 	{#each data.stories as story, index (story.id)}
 		{@const globalIndex =
 			data.startIndex !== undefined ? data.startIndex + index : (data.startPage - 1) * 30 + index}
-		{@render storyItem(story, globalIndex, data.visitData?.baseline ?? null)}
+		{@render storyItem(story, globalIndex, actualBaseline)}
 	{/each}
 
 	{#if data.previousDate || data.nextRange}

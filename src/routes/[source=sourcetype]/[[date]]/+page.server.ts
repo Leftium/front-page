@@ -9,7 +9,6 @@ export const load: PageServerLoad = async ({ fetch, params, cookies }) => {
 
 	const recentVisits = cookies.get('visits_recent');
 	const totalVisits = cookies.get('visits_total');
-	const baselineCookie = cookies.get('visits_baseline');
 	const pagesPerLoadCookie = cookies.get('pages_per_load');
 
 	const defaultPages = pagesPerLoadCookie ? parseInt(pagesPerLoadCookie, 10) : 3;
@@ -33,24 +32,18 @@ export const load: PageServerLoad = async ({ fetch, params, cookies }) => {
 		const total = totalVisits ? parseInt(totalVisits, 10) + 1 : 1;
 		cookies.set('visits_total', total.toString(), { path: '/', maxAge: 60 * 60 * 24 * 365 });
 
-		let baseline: number | null;
-		if (baselineCookie) {
-			baseline = parseInt(baselineCookie, 10);
-		} else if (shouldRecordVisit && lastVisit) {
-			baseline = lastVisit;
-			cookies.set('visits_baseline', lastVisit.toString(), { path: '/' });
-		} else {
-			baseline = lastVisit;
-		}
+		// Automatic baseline: Use the previous visit (session-based detection)
+		// Manual baseline will be handled client-side via localStorage
+		const baseline = lastVisit;
 
-		visitData = { total, lastVisit, baseline };
+		visitData = { total, lastVisit, baseline, recentVisits: recent };
 	} else {
 		const recent = recentVisits ? recentVisits.split('-').map(Number) : [];
 		const lastVisit = recent.length > 0 ? recent[recent.length - 1] : null;
 		const total = totalVisits ? parseInt(totalVisits, 10) : 0;
-		const baseline = baselineCookie ? parseInt(baselineCookie, 10) : lastVisit;
+		const baseline = lastVisit;
 
-		visitData = { total, lastVisit, baseline };
+		visitData = { total, lastVisit, baseline, recentVisits: recent };
 	}
 
 	let result;
