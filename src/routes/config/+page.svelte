@@ -91,14 +91,7 @@
 							value={feed.id}
 							checked={feed.id === currentSource}
 							disabled={!feed.available}
-							onchange={(e) => {
-								const target = e.currentTarget as HTMLInputElement;
-								if (formElement) {
-									formElement.requestSubmit();
-								} else {
-									window.location.href = `/${target.value}`;
-								}
-							}}
+							onchange={autoSubmit}
 						/>
 						{feed.name}
 					</label>
@@ -152,7 +145,9 @@
 		</label>
 
 		{#if buttonText === 'Back'}
-			<button type="button" onclick={() => (window.location.href = '/')}>Back</button>
+			<button type="button" onclick={() => (window.location.href = `/${currentSource}`)}
+				>Back</button
+			>
 		{:else}
 			<button type="submit">Save</button>
 		{/if}
