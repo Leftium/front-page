@@ -15,7 +15,15 @@ function parseHNHTML(html: string): { stories: NormalizedStory[]; nextId?: strin
 
 	let match;
 	while ((match = storyRegex.exec(html)) !== null) {
-		const [, id, url, title, domain, points, user, timestamp, comments] = match;
+		const [, id, url, rawTitle, domain, points, user, timestamp, comments] = match;
+
+		const title = rawTitle
+			.replace(/&amp;/g, '&')
+			.replace(/&lt;/g, '<')
+			.replace(/&gt;/g, '>')
+			.replace(/&quot;/g, '"')
+			.replace(/&#x27;/g, "'")
+			.replace(/&#39;/g, "'");
 
 		let finalUrl: string | undefined = url;
 		let finalDomain: string | undefined = domain;
