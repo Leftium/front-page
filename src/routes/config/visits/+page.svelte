@@ -48,6 +48,10 @@
 	<form method="POST">
 		<h2>Recent Visits</h2>
 		{#each uniqueVisits as visit}
+			{@const [date, time] = formatVisitTime(visit).split(' ')}
+			{@const hourDigits = time.split(':')[0]}
+			{@const needsGhost = hourDigits.length === 1}
+			{@const relTime = relativeTimeAbbrev(visit)}
 			<label>
 				<input
 					type="radio"
@@ -55,7 +59,8 @@
 					value={visit}
 					checked={visit === data.currentBaseline}
 				/>
-				{formatVisitTime(visit)} ({relativeTimeAbbrev(visit)})
+				{date}
+				{#if needsGhost}<span class="ghost">0</span>{/if}{time} <span class="ago">({relTime})</span>
 			</label>
 		{/each}
 
@@ -88,6 +93,17 @@
 	label {
 		display: block;
 		margin-bottom: var(--size-1);
+		font-variant-numeric: tabular-nums;
+	}
+
+	.ago {
+		display: inline-block;
+		min-width: 8ch;
+		text-align: right;
+	}
+
+	.ghost {
+		visibility: hidden;
 	}
 
 	button {
