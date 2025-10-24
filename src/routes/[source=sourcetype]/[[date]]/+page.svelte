@@ -153,34 +153,26 @@
 {/snippet}
 
 <main>
-	<d-item class="feed-info">
-		<a href="/config/feeds?from={data.source}">
-			<d-title>{FEED_NAMES[data.source]}</d-title>
-			<d-metadata>
-				<s-url>Change feed</s-url>
-			</d-metadata>
-		</a>
-		<s-scroll></s-scroll>
-	</d-item>
-
-	{#if data.visitData}
-		<d-item class="visit-info new-item">
-			<a href="/config/visits">
-				{#if data.visitData.baseline}
-					<d-title title={formatVisitTime(data.visitData.baseline)}
-						>Last visit: {relativeTimeAbbrev(data.visitData.baseline)} (total: {data.visitData
-							.total})</d-title
-					>
-				{:else}
-					<d-title>Last visit: First visit! (total: {data.visitData.total})</d-title>
-				{/if}
+	<d-item class="config-info new-item">
+		<a href="/config?from={data.source}">
+			<d-title>Feed: {FEED_NAMES[data.source]}</d-title>
+			{#if data.visitData}
 				<d-metadata>
-					<s-url>Manage visits</s-url>
+					{#if data.visitData.baseline}
+						<span title={formatVisitTime(data.visitData.baseline)}
+							>Last visit: {relativeTimeAbbrev(data.visitData.baseline)} (total: {data.visitData
+								.total})</span
+						>
+					{:else}
+						<span>Last visit: First visit! (total: {data.visitData.total})</span>
+					{/if}
 				</d-metadata>
-			</a>
-			<s-scroll class="new"></s-scroll>
-		</d-item>
-	{/if}
+			{/if}
+		</a>
+		<s-scroll class="new">
+			<s-config>⚙</s-config>
+		</s-scroll>
+	</d-item>
 
 	{#each data.stories as story, index (story.id)}
 		{@const globalIndex = (data.startPage - 1) * 30 + index}
@@ -234,10 +226,8 @@
 			border-left-color: rgba(255, 102, 0, 0.8);
 		}
 
-		&.feed-info d-title,
-		&.feed-info d-metadata,
-		&.visit-info d-title,
-		&.visit-info d-metadata {
+		&.config-info d-title,
+		&.config-info d-metadata {
 			text-align: center;
 			justify-content: center;
 		}
@@ -425,6 +415,15 @@
 		opacity: 0.6;
 		font-size: 15px;
 		font-variant-numeric: tabular-nums;
+	}
+
+	s-config {
+		font-size: 18px;
+		opacity: 0.5;
+	}
+
+	s-scroll:hover s-config {
+		opacity: 0.8;
 	}
 
 	a:visited s-url {

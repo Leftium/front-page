@@ -10,6 +10,9 @@ export const load: PageServerLoad = async ({ fetch, params, cookies }) => {
 	const recentVisits = cookies.get('visits_recent');
 	const totalVisits = cookies.get('visits_total');
 	const baselineCookie = cookies.get('visits_baseline');
+	const pagesPerLoadCookie = cookies.get('pages_per_load');
+
+	const defaultPages = pagesPerLoadCookie ? parseInt(pagesPerLoadCookie, 10) : 3;
 
 	let visitData = null;
 
@@ -54,7 +57,7 @@ export const load: PageServerLoad = async ({ fetch, params, cookies }) => {
 	let previousDate: string | undefined;
 	let nextRange: string | undefined;
 	let startPage = 1;
-	let endPage = 3;
+	let endPage = defaultPages;
 
 	if (source === 'hckrnews') {
 		const hckrResult = await fetchHckrnews(fetch, date);
