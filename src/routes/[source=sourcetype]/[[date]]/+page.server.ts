@@ -35,7 +35,7 @@ export const load: PageServerLoad = async ({ fetch, params, cookies }) => {
 			baseline = parseInt(baselineCookie, 10);
 		} else if (shouldRecordVisit && lastVisit) {
 			baseline = lastVisit;
-			cookies.set('visits_baseline', lastVisit.toString(), { path: '/', maxAge: 60 * 60 * 24 });
+			cookies.set('visits_baseline', lastVisit.toString(), { path: '/' });
 		} else {
 			baseline = lastVisit;
 		}
