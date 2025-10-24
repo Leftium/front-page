@@ -8,8 +8,6 @@
 	const currentSource = data?.source || 'hckrnews';
 
 	let formElement: HTMLFormElement;
-	let buttonText = $state('Save');
-	let buttonType = $state<'submit' | 'button'>('submit');
 
 	const groupedFeeds = FEED_SOURCES.reduce(
 		(acc, feed) => {
@@ -63,17 +61,24 @@
 			formElement.requestSubmit();
 		}
 	}
-
-	$effect(() => {
-		buttonText = 'Back';
-		buttonType = 'button';
-	});
 </script>
 
 <main>
-	<h1>Configuration</h1>
+	<div class="header-bar">
+		<h1>Settings</h1>
+		<noscript>
+			<button type="submit" form="settings-form">Save</button>
+		</noscript>
+		<button
+			class="js-only"
+			type="button"
+			onclick={() => (window.location.href = `/${currentSource}`)}
+		>
+			Back
+		</button>
+	</div>
 
-	<form method="POST" bind:this={formElement}>
+	<form id="settings-form" method="POST" bind:this={formElement}>
 		<h2>Feed Selection</h2>
 		{#each Object.entries(groupedFeeds) as [category, feeds]}
 			<h3>
@@ -143,14 +148,6 @@
 			<input type="radio" name="baseline" value="custom" onchange={autoSubmit} />
 			<input type="datetime-local" name="custom_datetime" onchange={autoSubmit} />
 		</label>
-
-		{#if buttonText === 'Back'}
-			<button type="button" onclick={() => (window.location.href = `/${currentSource}`)}
-				>Back</button
-			>
-		{:else}
-			<button type="submit">Save</button>
-		{/if}
 	</form>
 </main>
 
@@ -161,8 +158,20 @@
 		padding: var(--size-4);
 	}
 
+	.header-bar {
+		position: sticky;
+		top: 0;
+		background-color: light-dark(#fff, #000);
+		z-index: 10;
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		padding-bottom: var(--size-3);
+		margin-bottom: var(--size-3);
+	}
+
 	h1 {
-		margin-bottom: var(--size-4);
+		margin: 0;
 	}
 
 	h2 {
@@ -232,7 +241,15 @@
 	}
 
 	button {
-		margin-top: var(--size-4);
 		padding: var(--size-2) var(--size-4);
+		cursor: pointer;
+	}
+
+	.js-only {
+		display: none;
+	}
+
+	:global(body:has(script)) .js-only {
+		display: inline-block;
 	}
 </style>
