@@ -120,7 +120,7 @@
 		<hr />
 
 		<div class="pages-header">
-			<h2>Pages Per Load <span class="subheader">(30 items per page)</span></h2>
+			<h2>Items Per Page</h2>
 			<div class="radio-group-inline">
 				{#each [1, 2, 3, 4] as pages}
 					<label>
@@ -131,7 +131,7 @@
 							checked={pages === data.pagesPerLoad}
 							onchange={autoSubmit}
 						/>
-						{pages}
+						{pages * 30}
 					</label>
 				{/each}
 			</div>
