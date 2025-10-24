@@ -2,6 +2,7 @@ import type { NormalizedStory } from './fetch-hckrnews';
 
 const SOURCE_URLS: Record<string, string> = {
 	shownew: 'https://news.ycombinator.com/shownew',
+	asknew: 'https://news.ycombinator.com/asknew',
 	noobstories: 'https://news.ycombinator.com/noobstories',
 	pool: 'https://news.ycombinator.com/pool',
 	classic: 'https://news.ycombinator.com/classic',

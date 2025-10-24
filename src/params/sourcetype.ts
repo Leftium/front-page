@@ -10,6 +10,7 @@ export const match: ParamMatcher = (param) => {
 		'show',
 		'jobs',
 		'shownew',
+		'asknew',
 		'active',
 		'bestcomments',
 		'noobstories',
