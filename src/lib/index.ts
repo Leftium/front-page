@@ -13,7 +13,8 @@ export const FEED_NAMES: Record<string, string> = {
 	noobstories: 'Noob Stories',
 	pool: 'Pool',
 	classic: 'Classic',
-	launches: 'Launches'
+	launches: 'Launches',
+	invited: 'Invited'
 };
 
 export const FEED_SOURCES = [
@@ -31,5 +32,6 @@ export const FEED_SOURCES = [
 	{ id: 'noobstories', name: 'Noob Stories', category: 'More lists', available: true },
 	{ id: 'pool', name: 'Pool', category: 'More lists', available: true },
 	{ id: 'classic', name: 'Classic', category: 'More lists', available: true },
-	{ id: 'launches', name: 'Launches', category: 'More lists', available: true }
+	{ id: 'launches', name: 'Launches', category: 'More lists', available: true },
+	{ id: 'invited', name: 'Invited', category: 'More lists', available: true }
 ];

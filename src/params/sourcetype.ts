@@ -16,6 +16,7 @@ export const match: ParamMatcher = (param) => {
 		'noobstories',
 		'pool',
 		'classic',
-		'launches'
+		'launches',
+		'invited'
 	].includes(param);
 };
