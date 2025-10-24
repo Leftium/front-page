@@ -51,18 +51,27 @@ export const load: PageServerLoad = async ({ fetch, params, cookies }) => {
 	}
 
 	let result;
+	let previousDate: string | undefined;
+	let nextPage: number | undefined;
 
 	if (source === 'hckrnews') {
-		result = await fetchHckrnews(fetch, date);
+		const hckrResult = await fetchHckrnews(fetch, date);
+		result = hckrResult.stories;
+		previousDate = hckrResult.previousDate;
 	} else if (['top', 'new', 'best', 'ask', 'show', 'jobs'].includes(source)) {
-		result = await fetchHNApi(fetch, source);
+		const page = date ? parseInt(date, 10) : 1;
+		const apiResult = await fetchHNApi(fetch, source, page);
+		result = apiResult.stories;
+		nextPage = apiResult.nextPage;
 	} else {
-		result = await fetchHN(fetch, source);
+		const hnResult = await fetchHN(fetch, source);
+		result = hnResult.stories;
 	}
 
 	return {
-		stories: result.stories,
-		previousDate: result.previousDate,
+		stories: result,
+		previousDate,
+		nextPage,
 		visitData,
 		source
 	};

@@ -186,13 +186,21 @@
 		{@render storyItem(story, index, data.visitData?.baseline ?? null)}
 	{/each}
 
-	{#if data.previousDate}
+	{#if data.previousDate || data.nextPage}
 		<d-item class="more-link">
-			<a href="/{data.source}/{data.previousDate}">
-				<d-metadata>
-					<s-url>More... {data.previousDate}</s-url>
-				</d-metadata>
-			</a>
+			{#if data.previousDate}
+				<a href="/{data.source}/{data.previousDate}">
+					<d-metadata>
+						<s-url>More... {data.previousDate}</s-url>
+					</d-metadata>
+				</a>
+			{:else if data.nextPage}
+				<a href="/{data.source}/{data.nextPage}">
+					<d-metadata>
+						<s-url>More...</s-url>
+					</d-metadata>
+				</a>
+			{/if}
 			<s-scroll></s-scroll>
 		</d-item>
 	{/if}
