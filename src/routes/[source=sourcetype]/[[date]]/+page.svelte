@@ -169,7 +169,12 @@
 				</d-metadata>
 			{/if}
 		</a>
-		<s-scroll class="new">
+		<s-scroll
+			class="new"
+			onclick={(e: MouseEvent) => {
+				window.location.href = `/config?from=${data.source}`;
+			}}
+		>
 			<s-config>⚙</s-config>
 		</s-scroll>
 	</d-item>
@@ -187,14 +192,23 @@
 						<s-url>More... {data.previousDate}</s-url>
 					</d-metadata>
 				</a>
+				<s-scroll
+					onclick={(e: MouseEvent) => {
+						window.location.href = `/${data.source}/${data.previousDate}`;
+					}}
+				></s-scroll>
 			{:else if data.nextRange}
 				<a href="/{data.source}/{data.nextRange}">
 					<d-metadata>
 						<s-url>More...</s-url>
 					</d-metadata>
 				</a>
+				<s-scroll
+					onclick={(e: MouseEvent) => {
+						window.location.href = `/${data.source}/${data.nextRange}`;
+					}}
+				></s-scroll>
 			{/if}
-			<s-scroll></s-scroll>
 		</d-item>
 	{/if}
 
