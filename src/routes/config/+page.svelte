@@ -8,6 +8,7 @@
 	const currentSource = data?.source || 'hckrnews';
 
 	let formElement: HTMLFormElement;
+	let datetimeInput: HTMLInputElement;
 
 	const groupedFeeds = FEED_SOURCES.reduce(
 		(acc, feed) => {
@@ -56,19 +57,29 @@
 		return !current.isSame(prev, 'minute');
 	});
 
+	const defaultDatetime = dayjs().format('YYYY-MM-DDTHH:mm');
+
 	function autoSubmit() {
 		if (formElement) {
 			formElement.requestSubmit();
 		}
+	}
+
+	function setDatetimeFromVisit(timestamp: number) {
+		if (datetimeInput) {
+			datetimeInput.value = dayjs.unix(timestamp).format('YYYY-MM-DDTHH:mm');
+		}
+	}
+
+	if (typeof document !== 'undefined') {
+		document.documentElement.classList.add('js-enabled');
 	}
 </script>
 
 <main>
 	<div class="header-bar">
 		<h1>Settings</h1>
-		<noscript>
-			<button type="submit" form="settings-form">Save</button>
-		</noscript>
+		<button class="no-js-only" type="submit" form="settings-form">Save</button>
 		<button
 			class="js-only"
 			type="button"
@@ -79,14 +90,16 @@
 	</div>
 
 	<form id="settings-form" method="POST" bind:this={formElement}>
-		<h2>Feed Selection</h2>
+		<h2>List <span class="subheader">(which stories shown)</span></h2>
 		{#each Object.entries(groupedFeeds) as [category, feeds]}
-			<h3>
-				{category}
-				{#if category === 'More Lists'}
-					<span class="coming-soon">(coming soon)</span>
-				{/if}
-			</h3>
+			{#if category !== 'Curated'}
+				<h3>
+					{category}
+					{#if category === 'More Lists'}
+						<span class="coming-soon">(coming soon)</span>
+					{/if}
+				</h3>
+			{/if}
 			<div class="radio-group-horizontal">
 				{#each feeds as feed}
 					<label class:disabled={!feed.available}>
@@ -104,25 +117,37 @@
 			</div>
 		{/each}
 
-		<h2>Pages Per Load <span class="subheader">(30 items per page)</span></h2>
-		<div class="radio-group-horizontal pages-grid">
-			{#each [1, 2, 3, 4] as pages}
-				<label>
-					<input
-						type="radio"
-						name="pages_per_load"
-						value={pages}
-						checked={pages === data.pagesPerLoad}
-						onchange={autoSubmit}
-					/>
-					{pages}
-					{pages === 1 ? 'page' : 'pages'}
-				</label>
-			{/each}
+		<hr />
+
+		<div class="pages-header">
+			<h2>Pages Per Load <span class="subheader">(30 items per page)</span></h2>
+			<div class="radio-group-inline">
+				{#each [1, 2, 3, 4] as pages}
+					<label>
+						<input
+							type="radio"
+							name="pages_per_load"
+							value={pages}
+							checked={pages === data.pagesPerLoad}
+							onchange={autoSubmit}
+						/>
+						{pages}
+					</label>
+				{/each}
+			</div>
 		</div>
 
-		<h2>Visit History</h2>
-		<p>Total visits: {data.total}</p>
+		<h2>
+			Last Visit <span class="subheader">(determines new item highlighting)</span>
+		</h2>
+
+		<input
+			bind:this={datetimeInput}
+			type="datetime-local"
+			name="custom_datetime"
+			value={defaultDatetime}
+			onchange={autoSubmit}
+		/>
 
 		<h3>Recent Visits</h3>
 		{#each uniqueVisits as visit}
@@ -133,21 +158,14 @@
 			<label>
 				<input
 					type="radio"
-					name="baseline"
+					name="baseline_display"
 					value={visit}
-					checked={visit === data.currentBaseline}
-					onchange={autoSubmit}
+					onchange={() => setDatetimeFromVisit(visit)}
 				/>
 				{date}
 				{#if needsGhost}<span class="ghost">0</span>{/if}{time} <span class="ago">({relTime})</span>
 			</label>
 		{/each}
-
-		<h3>Custom Baseline</h3>
-		<label>
-			<input type="radio" name="baseline" value="custom" onchange={autoSubmit} />
-			<input type="datetime-local" name="custom_datetime" onchange={autoSubmit} />
-		</label>
 	</form>
 </main>
 
@@ -214,13 +232,31 @@
 		margin-bottom: var(--size-2);
 	}
 
-	.radio-group-horizontal.pages-grid {
-		grid-template-columns: repeat(4, 1fr);
-	}
-
 	.radio-group-horizontal label {
 		display: inline-block;
 		margin-bottom: 0;
+		white-space: nowrap;
+	}
+
+	.pages-header {
+		display: flex;
+		align-items: baseline;
+		gap: var(--size-4);
+		flex-wrap: wrap;
+	}
+
+	.pages-header h2 {
+		margin: 0;
+	}
+
+	.radio-group-inline {
+		display: flex;
+		gap: var(--size-3);
+	}
+
+	.radio-group-inline label {
+		display: inline-block;
+		white-space: nowrap;
 	}
 
 	.coming-soon {
@@ -258,11 +294,21 @@
 		border-color: light-dark(#bbb, #555);
 	}
 
+	hr {
+		border: none;
+		border-top: 1px solid light-dark(#e0e0e0, #333);
+		margin: var(--size-5) 0;
+	}
+
 	.js-only {
 		display: none;
 	}
 
-	:global(body:has(script)) .js-only {
+	:global(.js-enabled) .js-only {
 		display: inline-block;
+	}
+
+	:global(.js-enabled) .no-js-only {
+		display: none;
 	}
 </style>

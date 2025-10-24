@@ -28,15 +28,11 @@ export const load: PageServerLoad = async ({ cookies, url }) => {
 export const actions: Actions = {
 	default: async ({ request, cookies, url }) => {
 		const data = await request.formData();
-		const baseline = data.get('baseline');
 		const customDatetime = data.get('custom_datetime');
 		const pagesPerLoad = data.get('pages_per_load');
 
-		if (baseline) {
-			const timestamp =
-				baseline === 'custom' && customDatetime
-					? Math.floor(new Date(customDatetime.toString()).getTime() / 1000)
-					: baseline;
+		if (customDatetime) {
+			const timestamp = Math.floor(new Date(customDatetime.toString()).getTime() / 1000);
 			cookies.set('visits_baseline', timestamp.toString(), COOKIE_OPTIONS);
 		}
 
