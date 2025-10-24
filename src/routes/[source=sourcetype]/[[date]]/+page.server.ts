@@ -30,10 +30,14 @@ export const load: PageServerLoad = async ({ fetch, params, cookies }) => {
 		const total = totalVisits ? parseInt(totalVisits, 10) + 1 : 1;
 		cookies.set('visits_total', total.toString(), { path: '/', maxAge: 60 * 60 * 24 * 365 });
 
-		const baseline = baselineCookie ? parseInt(baselineCookie, 10) : lastVisit;
-
+		let baseline: number | null;
 		if (baselineCookie) {
-			cookies.delete('visits_baseline', { path: '/' });
+			baseline = parseInt(baselineCookie, 10);
+		} else if (shouldRecordVisit && lastVisit) {
+			baseline = lastVisit;
+			cookies.set('visits_baseline', lastVisit.toString(), { path: '/', maxAge: 60 * 60 * 24 });
+		} else {
+			baseline = lastVisit;
 		}
 
 		visitData = { total, lastVisit, baseline };

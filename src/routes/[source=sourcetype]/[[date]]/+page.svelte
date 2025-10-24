@@ -115,7 +115,7 @@
 		.replace(domain || '', '')
 		.replace(/\/$/, '')}
 
-	{@const isNew = baseline && timeFrontpage && timeFrontpage > baseline}
+	{@const isNew = baseline && (timeFrontpage ? timeFrontpage > baseline : time > baseline)}
 
 	<d-item class:new-item={isNew}>
 		<a href={link}>
@@ -166,9 +166,9 @@
 	{#if data.visitData}
 		<d-item class="visit-info new-item">
 			<a href="/config/visits">
-				{#if data.visitData.lastVisit}
-					<d-title title={formatVisitTime(data.visitData.lastVisit)}
-						>Last visit: {relativeTimeAbbrev(data.visitData.lastVisit)} (total: {data.visitData
+				{#if data.visitData.baseline}
+					<d-title title={formatVisitTime(data.visitData.baseline)}
+						>Last visit: {relativeTimeAbbrev(data.visitData.baseline)} (total: {data.visitData
 							.total})</d-title
 					>
 				{:else}
