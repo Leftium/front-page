@@ -131,7 +131,7 @@
 			.replace(source, '')
 			.replace(/\/$/, '')}
 
-		{@const isNew = data.visitData?.lastVisit && date > data.visitData.lastVisit}
+		{@const isNew = data.visitData?.baseline && date > data.visitData.baseline}
 
 		<d-item class:new-item={isNew}>
 			<a href={link}>
@@ -188,6 +188,7 @@
 		grid-template-columns: 1fr 3.5ch;
 		background: light-dark(#ffffff, #262626);
 		border-top: 1px solid light-dark(#e6e6df, #3a3a3a);
+		border-left: 4px solid light-dark(#ffffff, #262626);
 
 		&:first-child {
 			border-top: none;
@@ -195,10 +196,15 @@
 
 		&:hover {
 			background: light-dark(rgb(245, 245, 245), #2d2d2d);
+			border-left-color: light-dark(rgb(245, 245, 245), #2d2d2d);
 		}
 
 		&.new-item {
-			border-left: 4px solid rgba(255, 102, 0, 0.8);
+			border-left-color: rgba(255, 102, 0, 0.8);
+		}
+
+		&.new-item:hover {
+			border-left-color: rgba(255, 102, 0, 0.8);
 		}
 
 		&.visit-info d-title,
@@ -406,10 +412,6 @@
 	}
 
 	@media (min-width: 42.875em) {
-		d-item {
-			border-left: 1px solid light-dark(#e6e6df, #3a3a3a);
-		}
-
 		s-scroll {
 			border-right: 1px solid light-dark(#e6e6df, #3a3a3a);
 		}
