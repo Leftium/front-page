@@ -22,8 +22,8 @@ export const load: PageServerLoad = async ({ fetch, params, cookies }) => {
 		const lastVisit = recent.length > 0 ? recent[recent.length - 1] : null;
 
 		// Update or add visit based on time difference
-		if (!lastVisit) {
-			// First visit ever
+		if (!lastVisit || recent.length === 1) {
+			// First visit ever or only one visit (need to establish baseline)
 			recent.push(now);
 		} else {
 			const timeDiff = now - lastVisit;
