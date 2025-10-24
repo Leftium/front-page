@@ -166,8 +166,11 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: baseline;
-		padding-bottom: var(--size-3);
-		margin-bottom: var(--size-3);
+		padding: var(--size-4) var(--size-4) var(--size-3) var(--size-4);
+		margin: calc(-1 * var(--size-4)) calc(-1 * var(--size-4)) var(--size-3);
+		backdrop-filter: blur(8px);
+		background-color: light-dark(rgba(255, 255, 255, 0.9), rgba(0, 0, 0, 0.9));
+		border-bottom: 1px solid light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1));
 	}
 
 	h1 {
@@ -241,8 +244,18 @@
 	}
 
 	button {
-		padding: var(--size-2) var(--size-4);
+		padding: var(--size-2) var(--size-3);
 		cursor: pointer;
+		border: 1px solid light-dark(#ddd, #333);
+		background: light-dark(#f5f5f5, #1a1a1a);
+		border-radius: 6px;
+		font-size: var(--font-size-1);
+		transition: all 0.15s ease;
+	}
+
+	button:hover {
+		background: light-dark(#e8e8e8, #2a2a2a);
+		border-color: light-dark(#bbb, #555);
 	}
 
 	.js-only {
