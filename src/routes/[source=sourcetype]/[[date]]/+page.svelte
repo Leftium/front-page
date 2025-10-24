@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { NormalizedStory } from '$lib/fetch-hckrnews';
+	import { FEED_NAMES } from '$lib';
 	let { data } = $props();
 	import 'open-props/style';
 	import dayjs from 'dayjs';
@@ -152,6 +153,16 @@
 {/snippet}
 
 <main>
+	<d-item class="feed-info">
+		<a href="/config/feeds?from={data.source}">
+			<d-title>{FEED_NAMES[data.source]}</d-title>
+			<d-metadata>
+				<s-url>Change feed</s-url>
+			</d-metadata>
+		</a>
+		<s-scroll></s-scroll>
+	</d-item>
+
 	{#if data.visitData}
 		<d-item class="visit-info new-item">
 			<a href="/config/visits">
@@ -214,6 +225,8 @@
 			border-left-color: rgba(255, 102, 0, 0.8);
 		}
 
+		&.feed-info d-title,
+		&.feed-info d-metadata,
 		&.visit-info d-title,
 		&.visit-info d-metadata {
 			text-align: center;
