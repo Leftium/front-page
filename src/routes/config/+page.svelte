@@ -95,9 +95,6 @@
 			{#if category !== 'Curated'}
 				<h3>
 					{category}
-					{#if category === 'More lists'}
-						<span class="coming-soon">(coming soon)</span>
-					{/if}
 				</h3>
 			{/if}
 			<div class="radio-group-horizontal">
@@ -146,7 +143,15 @@
 			type="datetime-local"
 			name="custom_datetime"
 			value={defaultDatetime}
-			onchange={autoSubmit}
+			onchange={() => {
+				// Add a hidden field to indicate datetime was explicitly changed
+				const hiddenInput = document.createElement('input');
+				hiddenInput.type = 'hidden';
+				hiddenInput.name = 'datetime_changed';
+				hiddenInput.value = 'true';
+				formElement.appendChild(hiddenInput);
+				autoSubmit();
+			}}
 		/>
 
 		<h3>Recent visits</h3>
