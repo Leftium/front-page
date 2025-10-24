@@ -58,6 +58,7 @@ export const load: PageServerLoad = async ({ fetch, params, cookies }) => {
 	let nextRange: string | undefined;
 	let startPage = 1;
 	let endPage = defaultPages;
+	let startIndex = 0;
 
 	if (source === 'hckrnews') {
 		const hckrResult = await fetchHckrnews(fetch, date);
@@ -78,11 +79,29 @@ export const load: PageServerLoad = async ({ fetch, params, cookies }) => {
 		result = apiResult.stories;
 		nextRange = apiResult.nextRange;
 	} else if (['shownew', 'noobstories', 'pool', 'classic', 'launches'].includes(source)) {
-		// Scraped feeds don't support pagination currently
-		// They only show the first 30 items from the page
-		const hnResult = await fetchHN(fetch, source);
+		let startId: string | undefined;
+		let pageCount = defaultPages;
+		let itemIndex = 0;
+
+		if (date) {
+			const parts = date.split(':');
+			if (parts.length === 3) {
+				startId = parts[0];
+				itemIndex = parseInt(parts[1], 10);
+				pageCount = parseInt(parts[2], 10);
+			} else if (parts.length === 2) {
+				startId = parts[0];
+				itemIndex = parseInt(parts[1], 10);
+			} else {
+				startId = date;
+				pageCount = 1;
+			}
+		}
+
+		const hnResult = await fetchHN(fetch, source, startId, pageCount, itemIndex);
 		result = hnResult.stories;
 		nextRange = hnResult.nextRange;
+		startIndex = itemIndex;
 	} else {
 		const hnResult = await fetchHN(fetch, source);
 		result = hnResult.stories;
@@ -94,6 +113,7 @@ export const load: PageServerLoad = async ({ fetch, params, cookies }) => {
 		nextRange,
 		startPage,
 		endPage,
+		startIndex,
 		visitData,
 		source
 	};

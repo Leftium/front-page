@@ -8,7 +8,7 @@ const SOURCE_URLS: Record<string, string> = {
 	launches: 'https://news.ycombinator.com/launches'
 };
 
-function parseHNHTML(html: string): NormalizedStory[] {
+function parseHNHTML(html: string): { stories: NormalizedStory[]; nextId?: string } {
 	const stories: NormalizedStory[] = [];
 	const storyRegex =
 		/<tr class="athing submission" id="(\d+)">.*?<span class="titleline"><a href="([^"]+)"[^>]*>([^<]+)<\/a>(?:<span class="sitebit comhead">.*?<span class="sitestr">([^<]+)<\/span>.*?<\/span>)?<\/span>.*?<span class="score"[^>]*>(\d+) points?<\/span> by <a href="user\?id=([^"]+)"[^>]*>[^<]+<\/a> <span class="age" title="[^"]+\s+(\d{10,})".*?<\/span>.*?(?:<a href="item\?id=\d+">(\d+)&nbsp;comments?<\/a>|<a href="item\?id=\d+">discuss<\/a>)/gs;
@@ -46,33 +46,64 @@ function parseHNHTML(html: string): NormalizedStory[] {
 		});
 	}
 
-	return stories;
-}
+	const moreLinkMatch = html.match(
+		/href=['"]([^"']*)\?next=(\d+)[^"']*['"][^>]*class=['"]morelink['"]/
+	);
+	const nextId = moreLinkMatch ? moreLinkMatch[2] : undefined;
 
-const ITEMS_PER_PAGE = 30;
+	return { stories, nextId };
+}
 
 export async function fetchHN(
 	fetchFn: typeof fetch,
 	source: string,
-	startPage: number = 1,
-	endPage: number = 1
+	startId?: string,
+	pageCount: number = 1,
+	startIndex: number = 0
 ): Promise<{ stories: NormalizedStory[]; nextRange?: string }> {
-	const url = SOURCE_URLS[source];
-	if (!url) {
+	const baseUrl = SOURCE_URLS[source];
+	if (!baseUrl) {
 		throw new Error(`Unknown HN source: ${source}`);
 	}
 
-	// Note: HN's Show New, Classic, etc. pages use a different pagination system
-	// with ?next=ID&n=count that's incompatible with our page-based approach.
-	// For now, we only fetch the first page (30 items).
+	const allStories: NormalizedStory[] = [];
+	const seenIds = new Set<number>();
+	let currentId = startId;
 
-	const response = await fetchFn(url);
-	const html = await response.text();
-	const stories = parseHNHTML(html);
+	for (let page = 0; page < pageCount; page++) {
+		try {
+			let url = baseUrl;
+			if (currentId) {
+				url = `${baseUrl}?next=${currentId}`;
+			}
 
-	// No pagination support for scraped feeds at this time
+			const response = await fetchFn(url);
+			const html = await response.text();
+			const parsed = parseHNHTML(html);
+
+			if (parsed.stories.length === 0) break;
+
+			for (const story of parsed.stories) {
+				if (!seenIds.has(story.id)) {
+					seenIds.add(story.id);
+					allStories.push(story);
+				}
+			}
+
+			currentId = parsed.nextId || parsed.stories[parsed.stories.length - 1].id.toString();
+		} catch (error) {
+			break;
+		}
+	}
+
+	const totalItems = startIndex + allStories.length;
+	const nextRange =
+		allStories.length > 0
+			? `${allStories[allStories.length - 1].id}:${totalItems}:${pageCount}`
+			: undefined;
+
 	return {
-		stories,
-		nextRange: undefined
+		stories: allStories,
+		nextRange
 	};
 }

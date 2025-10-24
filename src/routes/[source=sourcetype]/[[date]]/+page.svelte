@@ -180,7 +180,8 @@
 	</d-item>
 
 	{#each data.stories as story, index (story.id)}
-		{@const globalIndex = (data.startPage - 1) * 30 + index}
+		{@const globalIndex =
+			data.startIndex !== undefined ? data.startIndex + index : (data.startPage - 1) * 30 + index}
 		{@render storyItem(story, globalIndex, data.visitData?.baseline ?? null)}
 	{/each}
 
