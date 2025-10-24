@@ -1,0 +1,20 @@
+import type { ParamMatcher } from '@sveltejs/kit';
+
+export const match: ParamMatcher = (param) => {
+	return [
+		'hckrnews',
+		'top',
+		'new',
+		'best',
+		'ask',
+		'show',
+		'jobs',
+		'shownew',
+		'active',
+		'bestcomments',
+		'noobstories',
+		'pool',
+		'classic',
+		'launches'
+	].includes(param);
+};

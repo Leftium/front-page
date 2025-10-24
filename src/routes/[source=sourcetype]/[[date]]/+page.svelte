@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { NormalizedStory } from '$lib/fetch-hckrnews';
 	let { data } = $props();
 	import 'open-props/style';
 	import dayjs from 'dayjs';
@@ -91,6 +92,65 @@
 	</svg>
 {/snippet}
 
+{#snippet storyItem(story: NormalizedStory, index: number, baseline: number | null)}
+	{@const id = story.id}
+	{@const dead = story.dead}
+	{@const title = story.title}
+
+	{@const points = story.points}
+	{@const comments = story.comments}
+	{@const time = story.time}
+	{@const timeFrontpage = story.time_frontpage}
+	{@const dateDiffHours = timeFrontpage
+		? dayjs.unix(timeFrontpage).diff(dayjs.unix(time), 'hour')
+		: 0}
+
+	{@const link = dead
+		? `https://news.ycombinator.com/item?id=${id}`
+		: `https://hw.leftium.com/#/item/${id}`}
+	{@const domain = story.domain}
+	{@const path = story.url
+		?.replace(/^https:\/\/(www.)?/, '')
+		.replace(domain || '', '')
+		.replace(/\/$/, '')}
+
+	{@const isNew = baseline && timeFrontpage && timeFrontpage > baseline}
+
+	<d-item class:new-item={isNew}>
+		<a href={link}>
+			<d-title class:dead>{title}</d-title>
+			<d-metadata>
+				<s-points class:high={points >= 100} class:mid={points >= 50 && points < 100}
+					>{points} {@render upvote()}</s-points
+				>
+				<s-comments class:high={comments >= 100} class:mid={comments >= 50 && comments < 100}
+					>{dead ? '?' : comments} {@render message()}</s-comments
+				>
+				<s-time>{relativeTime(time)}</s-time>
+				{#if timeFrontpage}
+					<s-date class:muted={dateDiffHours < 24} class:highlighted={dateDiffHours >= 24}
+						>+{timeDelta(time, timeFrontpage)}</s-date
+					>
+				{/if}
+				<s-url>{domain}<s-path>{path}</s-path></s-url>
+			</d-metadata>
+		</a>
+		<s-scroll
+			class:new={isNew}
+			onclick={(e: MouseEvent) => {
+				e.preventDefault();
+				const target = e.currentTarget as HTMLElement;
+				target.previousElementSibling?.scrollIntoView({
+					behavior: 'smooth',
+					block: 'start'
+				});
+			}}
+		>
+			<s-index>{index + 1}</s-index>
+		</s-scroll>
+	</d-item>
+{/snippet}
+
 <main>
 	{#if data.visitData}
 		<d-item class="visit-info new-item">
@@ -111,71 +171,22 @@
 		</d-item>
 	{/if}
 
-	{#each data.json as item, index (item.id)}
-		{@const id = item.id}
-		{@const dead = item.dead}
-		{@const title = dead ? 'DEAD' : item.link_text}
-
-		{@const points = item.points}
-		{@const comments = item.comments || 0}
-		{@const time = item.time}
-		{@const date = item.date}
-		{@const dateDiffHours = dayjs.unix(date).diff(dayjs.unix(time), 'hour')}
-
-		{@const link = dead
-			? `https://news.ycombinator.com/item?id=${id}`
-			: `https://hw.leftium.com/#/item/${id}`}
-		{@const source = item.source?.replace(/^(www.)?/, '')}
-		{@const path = item.link
-			?.replace(/^https:\/\/(www.)?/, '')
-			.replace(source, '')
-			.replace(/\/$/, '')}
-
-		{@const isNew = data.visitData?.baseline && date > data.visitData.baseline}
-
-		<d-item class:new-item={isNew}>
-			<a href={link}>
-				<d-title class:dead>{title}</d-title>
-				<d-metadata>
-					<s-points class:high={points >= 100} class:mid={points >= 50 && points < 100}
-						>{points} {@render upvote()}</s-points
-					>
-					<s-comments class:high={comments >= 100} class:mid={comments >= 50 && comments < 100}
-						>{dead ? '?' : comments} {@render message()}</s-comments
-					>
-					<s-time>{relativeTime(time)}</s-time>
-					<s-date class:muted={dateDiffHours < 24} class:highlighted={dateDiffHours >= 24}
-						>+{timeDelta(time, date)}</s-date
-					>
-					<s-url>{source}<s-path>{path}</s-path></s-url>
-				</d-metadata>
-			</a>
-			<s-scroll
-				class:new={isNew}
-				onclick={(e: MouseEvent) => {
-					e.preventDefault();
-					const target = e.currentTarget as HTMLElement;
-					target.previousElementSibling?.scrollIntoView({
-						behavior: 'smooth',
-						block: 'start'
-					});
-				}}
-			>
-				<s-index>{index + 1}</s-index>
-			</s-scroll>
-		</d-item>
+	{#each data.stories as story, index (story.id)}
+		{@render storyItem(story, index, data.visitData?.baseline ?? null)}
 	{/each}
 
-	<d-item class="more-link">
-		<a href="/hckrnews/{data.previousDate}">
-			<d-metadata>
-				<s-url>More... {data.previousDate}</s-url>
-			</d-metadata>
-		</a>
-		<s-scroll></s-scroll>
-	</d-item>
+	{#if data.previousDate}
+		<d-item class="more-link">
+			<a href="/{data.source}/{data.previousDate}">
+				<d-metadata>
+					<s-url>More... {data.previousDate}</s-url>
+				</d-metadata>
+			</a>
+			<s-scroll></s-scroll>
+		</d-item>
+	{/if}
 
-	<pre hidden>{JSON.stringify(data.json, null, 4)}</pre>
+	<pre hidden>{JSON.stringify(data.stories, null, 4)}</pre>
 </main>
 
 <style>

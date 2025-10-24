@@ -1,11 +1,19 @@
-export const load = async ({ fetch, params, cookies, url }) => {
+import type { PageServerLoad } from './$types';
+import { fetchHckrnews } from '$lib/fetch-hckrnews';
+import { fetchHNApi } from '$lib/fetch-hn-api';
+import { fetchHN } from '$lib/fetch-hn';
+
+export const load: PageServerLoad = async ({ fetch, params, cookies }) => {
+	const source = params.source || 'hckrnews';
+	const date = params.date;
+
 	const recentVisits = cookies.get('visits_recent');
 	const totalVisits = cookies.get('visits_total');
 	const baselineCookie = cookies.get('visits_baseline');
 
 	let visitData = null;
 
-	if (!params.date) {
+	if (!date) {
 		const now = Math.floor(Date.now() / 1000);
 
 		const recent = recentVisits ? recentVisits.split('-').map(Number) : [];
@@ -38,24 +46,20 @@ export const load = async ({ fetch, params, cookies, url }) => {
 		visitData = { total, lastVisit, baseline };
 	}
 
-	const filename = params.date ? `${params.date.replace(/\./g, '')}.js` : 'latest.js';
+	let result;
 
-	const fetched = await fetch(`https://hckrnews.com/data/${filename}`);
-	const texted = await fetched.text();
-
-	const json = JSON.parse(texted.replace(/^var entries =/, ''));
-
-	let prevDate;
-	if (params.date) {
-		const [year, month, day] = params.date.split('.').map(Number);
-		prevDate = new Date(Date.UTC(year, month - 1, day));
+	if (source === 'hckrnews') {
+		result = await fetchHckrnews(fetch, date);
+	} else if (['top', 'new', 'best', 'ask', 'show', 'jobs'].includes(source)) {
+		result = await fetchHNApi(fetch, source);
 	} else {
-		const lastItem = json[json.length - 1];
-		prevDate = new Date(lastItem.date * 1000);
+		result = await fetchHN(fetch, source);
 	}
-	prevDate.setUTCDate(prevDate.getUTCDate() - 1);
 
-	const previousDate = `${prevDate.getUTCFullYear()}.${String(prevDate.getUTCMonth() + 1).padStart(2, '0')}.${String(prevDate.getUTCDate()).padStart(2, '0')}`;
-
-	return { json, previousDate, visitData };
+	return {
+		stories: result.stories,
+		previousDate: result.previousDate,
+		visitData,
+		source
+	};
 };
