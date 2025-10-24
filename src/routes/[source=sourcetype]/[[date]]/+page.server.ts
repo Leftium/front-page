@@ -78,6 +78,7 @@ export const load: PageServerLoad = async ({ fetch, params, cookies }) => {
 		const apiResult = await fetchHNApi(fetch, source, startPage, endPage);
 		result = apiResult.stories;
 		nextRange = apiResult.nextRange;
+		startIndex = (startPage - 1) * 30;
 	} else if (['shownew', 'noobstories', 'pool', 'classic', 'launches'].includes(source)) {
 		let startId: string | undefined;
 		let pageCount = defaultPages;
