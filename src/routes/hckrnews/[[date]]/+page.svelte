@@ -179,10 +179,6 @@
 </main>
 
 <style>
-	main {
-		box-shadow: var(--shadow-6);
-	}
-
 	d-item {
 		display: grid;
 		grid-template-columns: 1fr 3.5ch;
@@ -412,6 +408,14 @@
 	}
 
 	@media (min-width: 42.875em) {
+		d-item {
+			border-left-width: 0;
+		}
+
+		d-item.new-item {
+			border-left-width: 4px;
+		}
+
 		s-scroll {
 			border-right: 1px solid light-dark(#e6e6df, #3a3a3a);
 		}
