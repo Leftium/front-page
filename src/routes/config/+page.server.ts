@@ -14,7 +14,7 @@ export const load: PageServerLoad = async ({ cookies, url }) => {
 		recent,
 		total,
 		source: url.searchParams.get('from') || 'hckrnews',
-		pagesPerLoad: parseInt(cookies.get('pages_per_load') ?? '3', 10)
+		pagesPerLoad: parseInt(cookies.get('pages_per_load') ?? '1', 10)
 	};
 };
 
