@@ -192,23 +192,20 @@
 						<s-url>More... {data.previousDate}</s-url>
 					</d-metadata>
 				</a>
-				<s-scroll
-					onclick={(e: MouseEvent) => {
-						window.location.href = `/${data.source}/${data.previousDate}`;
-					}}
-				></s-scroll>
 			{:else if data.nextRange}
 				<a href="/{data.source}/{data.nextRange}">
 					<d-metadata>
 						<s-url>More...</s-url>
 					</d-metadata>
 				</a>
-				<s-scroll
-					onclick={(e: MouseEvent) => {
-						window.location.href = `/${data.source}/${data.nextRange}`;
-					}}
-				></s-scroll>
 			{/if}
+			<s-scroll
+				onclick={(e: MouseEvent) => {
+					window.scrollTo({ top: 0, behavior: 'smooth' });
+				}}
+			>
+				<s-top-icon>⤒</s-top-icon>
+			</s-scroll>
 		</d-item>
 	{/if}
 
@@ -437,6 +434,15 @@
 	}
 
 	s-scroll:hover s-config {
+		opacity: 0.8;
+	}
+
+	s-top-icon {
+		font-size: 18px;
+		opacity: 0.5;
+	}
+
+	s-scroll:hover s-top-icon {
 		opacity: 0.8;
 	}
 
