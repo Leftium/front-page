@@ -2,16 +2,71 @@
 	import { favicon } from '@leftium/logo';
 	import 'sanitize.css';
 	import { FEED_SOURCES } from '$lib';
+	import { browser } from '$app/environment';
+	import { navigating } from '$app/stores';
+	import dayjs from 'dayjs';
 
 	import '../app.css';
 
-	let { children } = $props();
+	let { children, data } = $props();
 
 	const availableFeeds = FEED_SOURCES.filter((feed) => feed.available);
 	const mainFeeds = availableFeeds.filter(
 		(feed) => feed.category === 'Curated' || feed.category === 'Hacker News'
 	);
 	const moreFeeds = availableFeeds.filter((feed) => feed.category === 'More lists');
+
+	let sessionTimeRemaining = $state<number | null>(null);
+
+	function formatExpiryTime(timestamp: number): string {
+		const date = dayjs.unix(timestamp);
+		const hour = date.hour();
+		const ampm = hour >= 12 ? 'a' : 'a';
+		const hour12 = hour % 12 || 12;
+		return `${hour12}:${date.format('mm')}${ampm}`;
+	}
+
+	$effect(() => {
+		if (!browser) return;
+
+		const updateSessionTime = () => {
+			const cookies = document.cookie.split('; ');
+			const sessionCookie = cookies.find((row) => row.startsWith('session_active='));
+
+			if (sessionCookie) {
+				const sessionStart = parseInt(sessionCookie.split('=')[1], 10);
+				const now = Math.floor(Date.now() / 1000);
+				const elapsed = now - sessionStart;
+				const remaining = Math.max(0, 20 * 60 - elapsed);
+				const minutes = Math.floor(remaining / 60);
+				sessionTimeRemaining = minutes;
+			} else {
+				sessionTimeRemaining = null;
+			}
+		};
+
+		updateSessionTime();
+		const interval = setInterval(updateSessionTime, 60000);
+
+		return () => clearInterval(interval);
+	});
+
+	let clientSessionExpires = $state<number | null>(data.sessionExpires || null);
+
+	if (browser) {
+		navigating.subscribe((nav) => {
+			if (nav === null) {
+				const now = Math.floor(Date.now() / 1000);
+				document.cookie = `session_active=${now}; path=/; max-age=${20 * 60}`;
+				clientSessionExpires = now + 20 * 60;
+			}
+		});
+	}
+
+	async function endSession() {
+		document.cookie = 'session_active=; path=/; max-age=0';
+		window.location.href = '/';
+	}
 </script>
 
 <svelte:head>
@@ -74,6 +129,18 @@
 							Leftium.com
 						</a>
 					</li>
+					{#if clientSessionExpires}
+						<li class="session-item">
+							<h4>Session</h4>
+							<div class="session-text">
+								Ends: {formatExpiryTime(clientSessionExpires)}
+								{#if sessionTimeRemaining !== null && sessionTimeRemaining >= 0}
+									({sessionTimeRemaining}m)
+								{/if}
+							</div>
+							<button onclick={endSession} class="end-session-btn">End session</button>
+						</li>
+					{/if}
 				</ul>
 			</div>
 		</div>
@@ -136,5 +203,43 @@
 	footer a:hover {
 		color: light-dark(#ff6600, #ff9944);
 		text-decoration: underline;
+	}
+
+	.session-item {
+		display: flex;
+		flex-direction: column;
+		gap: var(--size-1);
+		margin-top: var(--size-4);
+	}
+
+	.session-item h4 {
+		font-size: var(--font-size-1);
+		font-weight: var(--font-weight-6);
+		margin: 0;
+		color: light-dark(#666, #999);
+	}
+
+	.session-text {
+		color: light-dark(#666, #999);
+		font-size: var(--font-size-1);
+	}
+
+	.end-session-btn {
+		align-self: flex-start;
+		padding: var(--size-1) var(--size-2);
+		font-size: var(--font-size-0);
+		background: light-dark(#f5f5f5, #2a2a2a);
+		border: 1px solid light-dark(#ccc, #444);
+		border-radius: 4px;
+		cursor: pointer;
+		color: light-dark(#666, #999);
+		transition: all 0.15s ease;
+		margin-left: 0;
+	}
+
+	.end-session-btn:hover {
+		background: light-dark(#e0e0e0, #333);
+		border-color: light-dark(#999, #666);
+		color: light-dark(#333, #ccc);
 	}
 </style>

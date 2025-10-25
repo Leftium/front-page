@@ -20,24 +20,24 @@ Use a short-lived rolling cookie (20 minutes) that naturally defines session bou
 
 ### Phase 1: Core Session Management (High Priority)
 
-- [ ] Add `session_active` cookie with 20-minute rolling expiry
-  - Cookie refreshed on every non-config page load
+- [x] Add `session_active` cookie with 20-minute rolling expiry
+  - Cookie refreshed on every page load
   - Presence/absence determines if request is part of existing session
-- [ ] Update visit recording logic in `+page.server.ts`
+- [x] Update visit recording logic in `+page.server.ts`
   - Record new visit only when `session_active` cookie is missing/expired
-  - Remove hardcoded 60-minute comparison logic
+  - Removed hardcoded 60-minute comparison logic
   - Keep recording visits to history array (up to 10)
 
 ### Phase 2: Baseline Improvements (Medium Priority)
 
-- [ ] Replace sessionStorage baseline with cookie-based selection
-  - Add `selected_baseline` persistent cookie
-  - Update config page to save selection to cookie instead of sessionStorage
-  - Update main page to read baseline from cookie (SSR accessible)
-- [ ] Add session status display
+- [x] Replace sessionStorage baseline with cookie-based selection
+  - Added `selected_baseline` persistent cookie
+  - Updated config page to save selection to cookie instead of sessionStorage
+  - Updated main page to read baseline from cookie (SSR accessible)
+- [x] Add session status display
   - Calculate and show time remaining in current session
-  - Add "End Session" button to manually expire session cookie
-  - Display in header or near highlight threshold selector
+  - Added "End Session" button to manually expire session cookie
+  - Displayed in header metadata alongside visit info
 
 ### Phase 3: UI Enhancements (Low Priority)
 

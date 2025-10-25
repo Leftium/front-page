@@ -11,6 +11,7 @@ export const load: PageServerLoad = async ({ fetch, params, cookies }) => {
 	const totalVisits = cookies.get('visits_total');
 	const pagesPerLoadCookie = cookies.get('pages_per_load');
 	const sessionActive = cookies.get('session_active');
+	const selectedBaseline = cookies.get('selected_baseline');
 
 	const defaultPages = pagesPerLoadCookie ? parseInt(pagesPerLoadCookie, 10) : 1;
 
@@ -25,14 +26,13 @@ export const load: PageServerLoad = async ({ fetch, params, cookies }) => {
 
 		const total = totalVisits ? parseInt(totalVisits, 10) + 1 : 1;
 		cookies.set('visits_total', total.toString(), { path: '/', maxAge: 60 * 60 * 24 * 365 });
-
-		cookies.set('session_active', now.toString(), { path: '/', maxAge: 20 * 60 });
-	} else {
-		cookies.set('session_active', sessionActive, { path: '/', maxAge: 20 * 60 });
 	}
 
+	cookies.set('session_active', now.toString(), { path: '/', maxAge: 20 * 60, httpOnly: false });
+
 	const trimmed = recent.slice(-10);
-	const baseline = trimmed.length > 1 ? trimmed[trimmed.length - 2] : null;
+	const autoBaseline = trimmed.length > 1 ? trimmed[trimmed.length - 2] : null;
+	const baseline = selectedBaseline ? parseInt(selectedBaseline, 10) : autoBaseline;
 	const lastVisit = trimmed.length > 0 ? trimmed[trimmed.length - 1] : null;
 	const total = totalVisits ? parseInt(totalVisits, 10) : 0;
 	const sessionStart = sessionActive ? parseInt(sessionActive, 10) : now;

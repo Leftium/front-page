@@ -7,13 +7,7 @@
 	let { data } = $props();
 
 	const currentSource = data?.source || 'hckrnews';
-
-	// Get manual baseline from sessionStorage if set
-	let manualBaseline = $state<number | null>(null);
-	if (browser) {
-		const stored = sessionStorage.getItem('manual_baseline');
-		manualBaseline = stored ? parseInt(stored, 10) : null;
-	}
+	let manualBaseline = $state<number | null>(data.selectedBaseline);
 
 	let formElement: HTMLFormElement;
 	let datetimeInput: HTMLInputElement;
@@ -80,20 +74,16 @@
 	}
 
 	function setManualBaseline(timestamp: number | null) {
-		if (browser) {
-			if (timestamp) {
-				sessionStorage.setItem('manual_baseline', timestamp.toString());
-			} else {
-				sessionStorage.removeItem('manual_baseline');
-			}
-			manualBaseline = timestamp;
-		}
+		manualBaseline = timestamp;
 	}
 
-	function clearManualBaseline() {
-		setManualBaseline(null);
-		// Reload to show automatic baseline
-		window.location.reload();
+	async function clearManualBaseline() {
+		const response = await fetch('?/clearBaseline', {
+			method: 'POST'
+		});
+		if (response.ok) {
+			window.location.reload();
+		}
 	}
 
 	if (typeof document !== 'undefined') {

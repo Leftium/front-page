@@ -4,18 +4,8 @@
 	let { data } = $props();
 	import 'open-props/style';
 	import dayjs from 'dayjs';
-	import { browser } from '$app/environment';
 
-	// Client-side baseline management
-	let actualBaseline = $state(data.visitData?.baseline ?? null);
-
-	if (browser) {
-		// Check for manual baseline override in sessionStorage
-		const manualBaseline = sessionStorage.getItem('manual_baseline');
-		if (manualBaseline) {
-			actualBaseline = parseInt(manualBaseline, 10);
-		}
-	}
+	const actualBaseline = data.visitData?.baseline ?? null;
 
 	function relativeTime(time: number | string): string {
 		const num = typeof time === 'string' ? parseInt(time, 10) : time;
