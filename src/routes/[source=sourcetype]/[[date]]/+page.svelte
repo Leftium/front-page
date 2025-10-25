@@ -162,10 +162,12 @@
 				<d-metadata>
 					{#if cutoffTime}
 						<span title={formatVisitTime(cutoffTime)}
-							>Last visit: {relativeTimeAbbrev(cutoffTime)}</span
+							>{data.newStoryCount} new {data.newStoryCount === 1 ? 'story' : 'stories'} since {relativeTimeAbbrev(
+								cutoffTime
+							)}</span
 						>
 					{:else}
-						<span>Last visit: none</span>
+						<span>First visit</span>
 					{/if}
 				</d-metadata>
 			{/if}

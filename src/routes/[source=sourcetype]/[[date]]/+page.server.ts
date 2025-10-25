@@ -119,6 +119,13 @@ export const load: PageServerLoad = async ({ fetch, params, cookies }) => {
 		result = hnResult.stories;
 	}
 
+	const newStoryCount = previousSessionOverride
+		? result.filter((story) => {
+				const storyTime = story.time_frontpage || story.time;
+				return storyTime > previousSessionOverride;
+			}).length
+		: 0;
+
 	return {
 		stories: result,
 		previousDate,
@@ -127,6 +134,7 @@ export const load: PageServerLoad = async ({ fetch, params, cookies }) => {
 		endPage,
 		startIndex,
 		visitData,
-		source
+		source,
+		newStoryCount
 	};
 };
