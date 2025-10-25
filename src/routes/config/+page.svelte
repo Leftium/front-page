@@ -60,6 +60,8 @@
 		return !current.isSame(prev, 'minute');
 	});
 
+	const currentlyUsing = manualOverride || (uniqueVisits.length > 1 ? uniqueVisits[1] : null);
+
 	const defaultDatetime = manualOverride
 		? dayjs.unix(manualOverride).format('YYYY-MM-DDTHH:mm')
 		: dayjs().format('YYYY-MM-DDTHH:mm');
@@ -148,20 +150,10 @@
 		<h2>New item highlighting</h2>
 
 		<p class="explanation">
-			Stories published after this time appear highlighted.<br />
-			Currently using: {#if manualOverride}{formatVisitTime(manualOverride)} ({relativeTimeAbbrev(
-					manualOverride
-				)}){:else if uniqueVisits.length > 1}{formatVisitTime(uniqueVisits[1])} ({relativeTimeAbbrev(
-					uniqueVisits[1]
-				)}){:else}No previous visit{/if}
+			Stories published after {#if currentlyUsing}{formatVisitTime(currentlyUsing)} ({relativeTimeAbbrev(
+					currentlyUsing
+				)}){:else}this time{/if} appear highlighted.
 		</p>
-
-		{#if manualOverride && uniqueVisits.length > 1}
-			{@const defaultValue = uniqueVisits[1]}
-			<button type="submit" form="clear-override-form" class="reset-button">
-				Reset to default: {formatVisitTime(defaultValue)} ({relativeTimeAbbrev(defaultValue)})
-			</button>
-		{/if}
 
 		<h3>Select a different time:</h3>
 
@@ -181,19 +173,21 @@
 					autoSubmit();
 				}}
 			/>
-			Custom time
 		</label>
-		{#each uniqueVisits as visit}
+
+		<h4>Recent visits</h4>
+		{#each uniqueVisits as visit, index}
 			{@const [date, time] = formatVisitTime(visit).split(' ')}
 			{@const hourDigits = time.split(':')[0]}
 			{@const needsGhost = hourDigits.length === 1}
 			{@const relTime = relativeTimeAbbrev(visit)}
+			{@const isDefault = index === 1 && uniqueVisits.length > 1}
 			<label>
 				<input
 					type="radio"
 					name="override_display"
 					value={visit}
-					checked={manualOverride === visit}
+					checked={currentlyUsing === visit}
 					onchange={() => {
 						setDatetimeFromVisit(visit);
 						datetimeTimestamp = visit;
@@ -206,6 +200,7 @@
 				/>
 				{date}
 				{#if needsGhost}<span class="ghost">0</span>{/if}{time} <span class="ago">({relTime})</span>
+				{#if isDefault}<span class="default-label">(default)</span>{/if}
 			</label>
 		{/each}
 	</form>
@@ -252,6 +247,14 @@
 		margin-top: var(--size-3);
 		margin-bottom: var(--size-2);
 		font-size: var(--font-size-2);
+		color: light-dark(#666, #999);
+	}
+
+	h4 {
+		margin-top: var(--size-3);
+		margin-bottom: var(--size-2);
+		font-size: var(--font-size-1);
+		font-weight: var(--font-weight-4);
 		color: light-dark(#666, #999);
 	}
 
@@ -304,6 +307,12 @@
 		font-size: 0.9em;
 		color: light-dark(#999, #666);
 		font-style: italic;
+	}
+
+	.default-label {
+		color: light-dark(#999, #666);
+		font-size: var(--font-size-0);
+		margin-left: var(--size-2);
 	}
 
 	.ago {
