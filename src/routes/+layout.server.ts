@@ -11,11 +11,10 @@ export const load: LayoutServerLoad = async ({ cookies }) => {
 		result.sessionExpires = sessionStart + 20 * 60;
 	}
 
-	if (totalVisits) {
-		result.visitData = {
-			total: parseInt(totalVisits, 10)
-		};
-	}
+	const total = totalVisits ? parseInt(totalVisits, 10) : 1;
+	result.visitData = {
+		total
+	};
 
 	return result;
 };
