@@ -10,52 +10,34 @@ export const load: PageServerLoad = async ({ fetch, params, cookies }) => {
 	const recentVisits = cookies.get('visits_recent');
 	const totalVisits = cookies.get('visits_total');
 	const pagesPerLoadCookie = cookies.get('pages_per_load');
+	const sessionActive = cookies.get('session_active');
 
 	const defaultPages = pagesPerLoadCookie ? parseInt(pagesPerLoadCookie, 10) : 1;
 
-	let visitData = null;
+	const now = Math.floor(Date.now() / 1000);
+	const recent = recentVisits ? recentVisits.split('-').map(Number) : [];
 
-	if (!date) {
-		const now = Math.floor(Date.now() / 1000);
+	if (!sessionActive) {
+		recent.push(now);
 
-		const recent = recentVisits ? recentVisits.split('-').map(Number) : [];
-		const lastVisit = recent.length > 0 ? recent[recent.length - 1] : null;
-
-		// Update or add visit based on time difference
-		if (!lastVisit || recent.length === 1) {
-			// First visit ever or only one visit (need to establish baseline)
-			recent.push(now);
-		} else {
-			const timeDiff = now - lastVisit;
-			if (timeDiff < 60 * 60) {
-				// Less than 60 minutes: update the most recent visit
-				recent[recent.length - 1] = now;
-			} else {
-				// 60+ minutes: add new visit
-				recent.push(now);
-			}
-		}
-
-		// Keep only the last 10 visits
 		const trimmed = recent.slice(-10);
 		cookies.set('visits_recent', trimmed.join('-'), { path: '/', maxAge: 60 * 60 * 24 * 365 });
 
 		const total = totalVisits ? parseInt(totalVisits, 10) + 1 : 1;
 		cookies.set('visits_total', total.toString(), { path: '/', maxAge: 60 * 60 * 24 * 365 });
 
-		// Automatic baseline: Use the previous visit (session-based detection)
-		// Manual baseline will be handled client-side via sessionStorage
-		const baseline = trimmed.length > 1 ? trimmed[trimmed.length - 2] : null;
-
-		visitData = { total, lastVisit: now, baseline, recentVisits: trimmed };
+		cookies.set('session_active', now.toString(), { path: '/', maxAge: 20 * 60 });
 	} else {
-		const recent = recentVisits ? recentVisits.split('-').map(Number) : [];
-		const lastVisit = recent.length > 0 ? recent[recent.length - 1] : null;
-		const total = totalVisits ? parseInt(totalVisits, 10) : 0;
-		const baseline = recent.length > 1 ? recent[recent.length - 2] : null;
-
-		visitData = { total, lastVisit, baseline, recentVisits: recent };
+		cookies.set('session_active', sessionActive, { path: '/', maxAge: 20 * 60 });
 	}
+
+	const trimmed = recent.slice(-10);
+	const baseline = trimmed.length > 1 ? trimmed[trimmed.length - 2] : null;
+	const lastVisit = trimmed.length > 0 ? trimmed[trimmed.length - 1] : null;
+	const total = totalVisits ? parseInt(totalVisits, 10) : 0;
+	const sessionStart = sessionActive ? parseInt(sessionActive, 10) : now;
+
+	const visitData = { total, lastVisit, baseline, recentVisits: trimmed, sessionStart };
 
 	let result;
 	let previousDate: string | undefined;
