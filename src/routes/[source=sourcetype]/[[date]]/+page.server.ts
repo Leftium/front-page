@@ -20,11 +20,7 @@ export const load: PageServerLoad = async ({ fetch, params, cookies }) => {
 	let total = totalVisits ? parseInt(totalVisits, 10) : 0;
 
 	if (!thresholdCookie) {
-		if (recent.length === 0) {
-			recent.push(now, now);
-		} else {
-			recent.push(now);
-		}
+		recent.push(now);
 		total += 1;
 
 		const trimmed = recent.slice(-10);
@@ -37,11 +33,13 @@ export const load: PageServerLoad = async ({ fetch, params, cookies }) => {
 	const previousSessionOverride = thresholdCookie ? parseInt(thresholdCookie, 10) : previousSession;
 	const currentSession = trimmed.at(-1) ?? null;
 
-	cookies.set('new_item_threshold', previousSessionOverride.toString(), {
-		path: '/',
-		maxAge: 20 * 60,
-		httpOnly: false
-	});
+	if (previousSessionOverride !== null) {
+		cookies.set('new_item_threshold', previousSessionOverride.toString(), {
+			path: '/',
+			maxAge: 20 * 60,
+			httpOnly: false
+		});
+	}
 
 	cookies.set('session_start', now.toString(), {
 		path: '/',
