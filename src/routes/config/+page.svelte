@@ -7,8 +7,8 @@
 	let { data } = $props();
 
 	const currentSource = data?.source || 'hckrnews';
-	let manualBaseline = $state<number | null>(data.selectedBaseline);
-	let datetimeTimestamp = $state<number | null>(manualBaseline);
+	let manualOverride = $state<number | null>(data.selectedOverride);
+	let datetimeTimestamp = $state<number | null>(manualOverride);
 
 	let formElement: HTMLFormElement;
 	let datetimeInput: HTMLInputElement;
@@ -60,8 +60,8 @@
 		return !current.isSame(prev, 'minute');
 	});
 
-	const defaultDatetime = manualBaseline
-		? dayjs.unix(manualBaseline).format('YYYY-MM-DDTHH:mm')
+	const defaultDatetime = manualOverride
+		? dayjs.unix(manualOverride).format('YYYY-MM-DDTHH:mm')
 		: dayjs().format('YYYY-MM-DDTHH:mm');
 
 	function autoSubmit() {
@@ -76,8 +76,8 @@
 		}
 	}
 
-	function setManualBaseline(timestamp: number | null) {
-		manualBaseline = timestamp;
+	function setManualOverride(timestamp: number | null) {
+		manualOverride = timestamp;
 	}
 
 	if (typeof document !== 'undefined') {
@@ -98,7 +98,7 @@
 		</button>
 	</div>
 
-	<form id="clear-baseline-form" method="POST" action="?/clearBaseline"></form>
+	<form id="clear-override-form" method="POST" action="?/clearOverride"></form>
 
 	<form id="settings-form" method="POST" action="?/updateSettings" bind:this={formElement}>
 		<h2>List <span class="subheader">(which stories shown)</span></h2>
@@ -145,48 +145,44 @@
 			</div>
 		</div>
 
-		<h2>
-			Last visit <span class="subheader">(determines new item highlighting)</span>
-			<span
-				class="help-icon"
-				title="Stories published after your baseline time appear bold. By default, the baseline is automatically set to your previous visit time. During an active session (20 minutes of activity), your baseline stays the same so you can track new stories. You can manually override the baseline using the controls below."
-				>ⓘ</span
-			>
-		</h2>
+		<h2>New item highlighting</h2>
 
-		<div class="manual-baseline-info">
-			{#if manualBaseline}
-				<span class="baseline-status">
-					<strong>Current:</strong> Manual override
-					<span class="baseline-time"
-						>{formatVisitTime(manualBaseline)} ({relativeTimeAbbrev(manualBaseline)})</span
-					>
-				</span>
-				<button type="submit" form="clear-baseline-form">Reset to automatic</button>
-			{:else}
-				<span class="baseline-status">
-					<strong>Current:</strong> Automatic (resets to previous visit when session ends)
-				</span>
-			{/if}
-		</div>
+		<p class="explanation">
+			Stories published after this time appear highlighted.<br />
+			Currently using: {#if manualOverride}{formatVisitTime(manualOverride)} ({relativeTimeAbbrev(
+					manualOverride
+				)}){:else if uniqueVisits.length > 1}{formatVisitTime(uniqueVisits[1])} ({relativeTimeAbbrev(
+					uniqueVisits[1]
+				)}){:else}No previous visit{/if}
+		</p>
 
-		<input
-			bind:this={datetimeInput}
-			type="datetime-local"
-			name="custom_datetime"
-			value={defaultDatetime}
-			onchange={() => {
-				const timestamp = Math.floor(new Date(datetimeInput.value).getTime() / 1000);
-				datetimeTimestamp = timestamp;
-				setManualBaseline(timestamp);
-				if (datetimeInput) {
-					datetimeInput.name = 'custom_datetime';
-				}
-				autoSubmit();
-			}}
-		/>
+		{#if manualOverride && uniqueVisits.length > 1}
+			{@const defaultValue = uniqueVisits[1]}
+			<button type="submit" form="clear-override-form" class="reset-button">
+				Reset to default: {formatVisitTime(defaultValue)} ({relativeTimeAbbrev(defaultValue)})
+			</button>
+		{/if}
 
-		<h3>Recent visits</h3>
+		<h3>Select a different time:</h3>
+
+		<label class="custom-time-label">
+			<input
+				bind:this={datetimeInput}
+				type="datetime-local"
+				name="custom_datetime"
+				value={defaultDatetime}
+				onchange={() => {
+					const timestamp = Math.floor(new Date(datetimeInput.value).getTime() / 1000);
+					datetimeTimestamp = timestamp;
+					setManualOverride(timestamp);
+					if (datetimeInput) {
+						datetimeInput.name = 'custom_datetime';
+					}
+					autoSubmit();
+				}}
+			/>
+			Custom time
+		</label>
 		{#each uniqueVisits as visit}
 			{@const [date, time] = formatVisitTime(visit).split(' ')}
 			{@const hourDigits = time.split(':')[0]}
@@ -195,13 +191,13 @@
 			<label>
 				<input
 					type="radio"
-					name="baseline_display"
+					name="override_display"
 					value={visit}
-					checked={manualBaseline === visit}
+					checked={manualOverride === visit}
 					onchange={() => {
 						setDatetimeFromVisit(visit);
 						datetimeTimestamp = visit;
-						setManualBaseline(visit);
+						setManualOverride(visit);
 						if (datetimeInput) {
 							datetimeInput.name = '';
 						}
@@ -357,38 +353,26 @@
 		display: none;
 	}
 
-	.manual-baseline-info {
+	.explanation {
+		margin-top: var(--size-2);
+		margin-bottom: var(--size-3);
+		line-height: 1.6;
+	}
+
+	.reset-button {
+		margin-bottom: var(--size-4);
+		padding: var(--size-2) var(--size-3);
+		font-size: var(--font-size-1);
+	}
+
+	.custom-time-label {
 		display: flex;
 		align-items: center;
-		justify-content: space-between;
-		gap: var(--size-3);
+		gap: var(--size-2);
 		margin-bottom: var(--size-3);
-		padding: var(--size-2) var(--size-3);
-		background: light-dark(#f5f5f5, #1a1a1a);
-		border: 1px solid light-dark(#ddd, #333);
-		border-radius: 6px;
 	}
 
-	.baseline-status {
-		display: flex;
-		flex-direction: column;
-		gap: var(--size-1);
-	}
-
-	.baseline-time {
-		font-size: var(--font-size-0);
-		color: light-dark(#666, #999);
-	}
-
-	.manual-baseline-info button {
-		padding: var(--size-1) var(--size-2);
-		font-size: var(--font-size-0);
-	}
-
-	.help-icon {
-		font-size: var(--font-size-1);
-		color: light-dark(#999, #666);
-		cursor: help;
-		margin-left: var(--size-2);
+	.custom-time-label input[type='datetime-local'] {
+		flex: 0 0 auto;
 	}
 </style>

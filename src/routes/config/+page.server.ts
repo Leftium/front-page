@@ -9,14 +9,17 @@ const COOKIE_OPTIONS = {
 export const load: PageServerLoad = async ({ cookies, url }) => {
 	const visitHistory = cookies.get('visits_history')?.split('-').map(Number) ?? [];
 	const total = parseInt(cookies.get('visits_total') ?? '0', 10);
-	const selectedBaseline = cookies.get('selected_baseline');
+	const thresholdCookie = cookies.get('new_item_threshold');
+
+	const previousSession = visitHistory.length > 1 ? visitHistory[visitHistory.length - 2] : null;
+	const isOverridden = thresholdCookie && parseInt(thresholdCookie, 10) !== previousSession;
 
 	return {
 		recent: visitHistory,
 		total,
 		source: url.searchParams.get('from') || 'hckrnews',
 		pagesPerLoad: parseInt(cookies.get('pages_per_load') ?? '1', 10),
-		selectedBaseline: selectedBaseline ? parseInt(selectedBaseline, 10) : null
+		selectedOverride: isOverridden && thresholdCookie ? parseInt(thresholdCookie, 10) : null
 	};
 };
 
@@ -25,7 +28,7 @@ export const actions: Actions = {
 		const data = await request.formData();
 		const pagesPerLoad = data.get('pages_per_load');
 		const customDatetime = data.get('custom_datetime');
-		const baselineDisplay = data.get('baseline_display');
+		const overrideDisplay = data.get('override_display');
 
 		if (pagesPerLoad) {
 			cookies.set('pages_per_load', pagesPerLoad.toString(), COOKIE_OPTIONS);
@@ -33,16 +36,36 @@ export const actions: Actions = {
 
 		if (customDatetime) {
 			const timestamp = Math.floor(new Date(customDatetime.toString()).getTime() / 1000);
-			cookies.set('selected_baseline', timestamp.toString(), COOKIE_OPTIONS);
-		} else if (baselineDisplay) {
-			cookies.set('selected_baseline', baselineDisplay.toString(), COOKIE_OPTIONS);
+			cookies.set('new_item_threshold', timestamp.toString(), {
+				path: '/',
+				maxAge: 20 * 60,
+				httpOnly: false
+			});
+		} else if (overrideDisplay) {
+			cookies.set('new_item_threshold', overrideDisplay.toString(), {
+				path: '/',
+				maxAge: 20 * 60,
+				httpOnly: false
+			});
 		}
 
 		const selectedFeed = data.get('feed') || url.searchParams.get('from') || 'hckrnews';
 		throw redirect(303, `/config?from=${selectedFeed}`);
 	},
-	clearBaseline: async ({ cookies, url }) => {
-		cookies.delete('selected_baseline', { path: '/' });
+	clearOverride: async ({ cookies, url }) => {
+		const visitHistory = cookies.get('visits_history')?.split('-').map(Number) ?? [];
+		const previousSession = visitHistory.length > 1 ? visitHistory[visitHistory.length - 2] : null;
+
+		if (previousSession) {
+			cookies.set('new_item_threshold', previousSession.toString(), {
+				path: '/',
+				maxAge: 20 * 60,
+				httpOnly: false
+			});
+		} else {
+			cookies.delete('new_item_threshold', { path: '/' });
+		}
+
 		const selectedFeed = url.searchParams.get('from') || 'hckrnews';
 		throw redirect(303, `/config?from=${selectedFeed}`);
 	}

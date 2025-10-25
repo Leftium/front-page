@@ -26,24 +26,25 @@
 		return `${hour12}:${date.format('mm')}${ampm}`;
 	}
 
+	const updateSessionTime = () => {
+		if (!browser) return;
+		const cookies = document.cookie.split('; ');
+		const sessionStartCookie = cookies.find((row) => row.startsWith('session_start='));
+
+		if (sessionStartCookie) {
+			const sessionStart = parseInt(sessionStartCookie.split('=')[1], 10);
+			const now = Math.floor(Date.now() / 1000);
+			const elapsed = now - sessionStart;
+			const remaining = Math.max(0, 20 * 60 - elapsed);
+			const minutes = Math.floor(remaining / 60);
+			sessionTimeRemaining = minutes;
+		} else {
+			sessionTimeRemaining = null;
+		}
+	};
+
 	$effect(() => {
 		if (!browser) return;
-
-		const updateSessionTime = () => {
-			const cookies = document.cookie.split('; ');
-			const sessionCookie = cookies.find((row) => row.startsWith('session_active='));
-
-			if (sessionCookie) {
-				const sessionStart = parseInt(sessionCookie.split('=')[1], 10);
-				const now = Math.floor(Date.now() / 1000);
-				const elapsed = now - sessionStart;
-				const remaining = Math.max(0, 20 * 60 - elapsed);
-				const minutes = Math.floor(remaining / 60);
-				sessionTimeRemaining = minutes;
-			} else {
-				sessionTimeRemaining = null;
-			}
-		};
 
 		updateSessionTime();
 		const interval = setInterval(updateSessionTime, 60000);
@@ -57,14 +58,20 @@
 		navigating.subscribe((nav) => {
 			if (nav === null) {
 				const now = Math.floor(Date.now() / 1000);
-				document.cookie = `session_active=${now}; path=/; max-age=${20 * 60}`;
+				const cookies = document.cookie.split('; ');
+				const thresholdCookie = cookies.find((row) => row.startsWith('new_item_threshold='));
+				const currentThreshold = thresholdCookie ? thresholdCookie.split('=')[1] : now.toString();
+				document.cookie = `new_item_threshold=${currentThreshold}; path=/; max-age=${20 * 60}`;
+				document.cookie = `session_start=${now}; path=/; max-age=${20 * 60}`;
 				clientSessionExpires = now + 20 * 60;
+				updateSessionTime();
 			}
 		});
 	}
 
 	async function endSession() {
-		document.cookie = 'session_active=; path=/; max-age=0';
+		document.cookie = 'new_item_threshold=; path=/; max-age=0';
+		document.cookie = 'session_start=; path=/; max-age=0';
 		window.location.href = '/';
 	}
 </script>

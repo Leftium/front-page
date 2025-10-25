@@ -10,8 +10,8 @@ export const load: PageServerLoad = async ({ fetch, params, cookies }) => {
 	const visitHistory = cookies.get('visits_history');
 	const totalVisits = cookies.get('visits_total');
 	const pagesPerLoadCookie = cookies.get('pages_per_load');
-	const sessionActive = cookies.get('session_active');
-	const selectedBaseline = cookies.get('selected_baseline');
+	const thresholdCookie = cookies.get('new_item_threshold');
+	const sessionStartCookie = cookies.get('session_start');
 
 	const defaultPages = pagesPerLoadCookie ? parseInt(pagesPerLoadCookie, 10) : 1;
 
@@ -19,7 +19,7 @@ export const load: PageServerLoad = async ({ fetch, params, cookies }) => {
 	const recent = visitHistory ? visitHistory.split('-').map(Number) : [];
 	let total = totalVisits ? parseInt(totalVisits, 10) : 0;
 
-	if (!sessionActive) {
+	if (!thresholdCookie) {
 		recent.push(now);
 		total += 1;
 
@@ -28,15 +28,32 @@ export const load: PageServerLoad = async ({ fetch, params, cookies }) => {
 		cookies.set('visits_total', total.toString(), { path: '/', maxAge: 60 * 60 * 24 * 365 });
 	}
 
-	cookies.set('session_active', now.toString(), { path: '/', maxAge: 20 * 60, httpOnly: false });
-
 	const trimmed = recent.slice(-10);
-	const autoBaseline = trimmed.length > 1 ? trimmed[trimmed.length - 2] : null;
-	const baseline = selectedBaseline ? parseInt(selectedBaseline, 10) : autoBaseline;
-	const lastVisit = trimmed.at(-1) ?? null;
-	const sessionStart = sessionActive ? parseInt(sessionActive, 10) : now;
+	const previousSession = trimmed.length > 1 ? trimmed[trimmed.length - 2] : null;
+	const previousSessionOverride = thresholdCookie ? parseInt(thresholdCookie, 10) : previousSession;
+	const currentSession = trimmed.at(-1) ?? null;
 
-	const visitData = { total, lastVisit, baseline, recentVisits: trimmed, sessionStart };
+	cookies.set('new_item_threshold', previousSessionOverride.toString(), {
+		path: '/',
+		maxAge: 20 * 60,
+		httpOnly: false
+	});
+
+	cookies.set('session_start', now.toString(), {
+		path: '/',
+		maxAge: 20 * 60,
+		httpOnly: false
+	});
+
+	const sessionStart = now;
+
+	const visitData = {
+		total,
+		currentSession,
+		previousSessionOverride,
+		recentVisits: trimmed,
+		sessionStart
+	};
 
 	let result;
 	let previousDate: string | undefined;

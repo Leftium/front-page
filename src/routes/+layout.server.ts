@@ -1,10 +1,10 @@
 import type { LayoutServerLoad } from './$types';
 
 export const load: LayoutServerLoad = async ({ cookies }) => {
-	const sessionActive = cookies.get('session_active');
+	const sessionStartCookie = cookies.get('session_start');
 
-	if (sessionActive) {
-		const sessionStart = parseInt(sessionActive, 10);
+	if (sessionStartCookie) {
+		const sessionStart = parseInt(sessionStartCookie, 10);
 		const sessionExpires = sessionStart + 20 * 60;
 
 		return {

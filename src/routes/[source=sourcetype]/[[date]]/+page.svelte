@@ -5,7 +5,7 @@
 	import 'open-props/style';
 	import dayjs from 'dayjs';
 
-	const actualBaseline = data.visitData?.baseline ?? null;
+	const cutoffTime = data.visitData?.previousSessionOverride ?? null;
 
 	function relativeTime(time: number | string): string {
 		const num = typeof time === 'string' ? parseInt(time, 10) : time;
@@ -95,7 +95,7 @@
 	</svg>
 {/snippet}
 
-{#snippet storyItem(story: NormalizedStory, index: number, baseline: number | null)}
+{#snippet storyItem(story: NormalizedStory, index: number, cutoff: number | null)}
 	{@const id = story.id}
 	{@const dead = story.dead}
 	{@const title = story.title}
@@ -117,8 +117,7 @@
 		.replace(domain || '', '')
 		.replace(/\/$/, '')}
 
-	{@const isNew =
-		actualBaseline && (timeFrontpage ? timeFrontpage > actualBaseline : time > actualBaseline)}
+	{@const isNew = cutoffTime && (timeFrontpage ? timeFrontpage > cutoffTime : time > cutoffTime)}
 
 	<d-item class:new-item={isNew}>
 		<a href={link}>
@@ -161,10 +160,9 @@
 			<d-title><strong>List: {FEED_NAMES[data.source]}</strong></d-title>
 			{#if data.visitData}
 				<d-metadata>
-					{#if actualBaseline}
-						<span title={formatVisitTime(actualBaseline)}
-							>Last visit: {relativeTimeAbbrev(actualBaseline)} (total: {data.visitData
-								.total})</span
+					{#if cutoffTime}
+						<span title={formatVisitTime(cutoffTime)}
+							>Last visit: {relativeTimeAbbrev(cutoffTime)} (total: {data.visitData.total})</span
 						>
 					{:else}
 						<span>Last visit: First visit! (total: {data.visitData.total})</span>
@@ -185,7 +183,7 @@
 	{#each data.stories as story, index (story.id)}
 		{@const globalIndex =
 			data.startIndex !== undefined ? data.startIndex + index : (data.startPage - 1) * 30 + index}
-		{@render storyItem(story, globalIndex, actualBaseline)}
+		{@render storyItem(story, globalIndex, cutoffTime)}
 	{/each}
 
 	{#if data.previousDate || data.nextRange}
