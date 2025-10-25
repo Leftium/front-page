@@ -20,7 +20,11 @@ export const load: PageServerLoad = async ({ fetch, params, cookies }) => {
 	let total = totalVisits ? parseInt(totalVisits, 10) : 0;
 
 	if (!thresholdCookie) {
-		recent.push(now);
+		if (recent.length === 0) {
+			recent.push(now, now);
+		} else {
+			recent.push(now);
+		}
 		total += 1;
 
 		const trimmed = recent.slice(-10);
