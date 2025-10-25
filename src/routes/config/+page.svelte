@@ -147,15 +147,15 @@
 			</div>
 		</div>
 
-		<h2>New item highlighting</h2>
+		<h2>New (unread) stories</h2>
 
 		<p class="explanation">
-			Stories published after {#if currentlyUsing}{formatVisitTime(currentlyUsing)} ({relativeTimeAbbrev(
+			Stories newer than {#if currentlyUsing}{formatVisitTime(currentlyUsing)} ({relativeTimeAbbrev(
 					currentlyUsing
-				)}){:else}this time{/if} appear highlighted.
+				)}){:else}this time{/if} get orange unread mark.
 		</p>
 
-		<h3>Select a different time:</h3>
+		<h3>Change when stories were last read:</h3>
 
 		<label class="custom-time-label">
 			<input
