@@ -8,6 +8,7 @@
 
 	const currentSource = data?.source || 'hckrnews';
 	let manualBaseline = $state<number | null>(data.selectedBaseline);
+	let datetimeTimestamp = $state<number | null>(manualBaseline);
 
 	let formElement: HTMLFormElement;
 	let datetimeInput: HTMLInputElement;
@@ -59,7 +60,9 @@
 		return !current.isSame(prev, 'minute');
 	});
 
-	const defaultDatetime = dayjs().format('YYYY-MM-DDTHH:mm');
+	const defaultDatetime = manualBaseline
+		? dayjs.unix(manualBaseline).format('YYYY-MM-DDTHH:mm')
+		: dayjs().format('YYYY-MM-DDTHH:mm');
 
 	function autoSubmit() {
 		if (formElement) {
@@ -75,15 +78,6 @@
 
 	function setManualBaseline(timestamp: number | null) {
 		manualBaseline = timestamp;
-	}
-
-	async function clearManualBaseline() {
-		const response = await fetch('?/clearBaseline', {
-			method: 'POST'
-		});
-		if (response.ok) {
-			window.location.reload();
-		}
 	}
 
 	if (typeof document !== 'undefined') {
@@ -104,7 +98,9 @@
 		</button>
 	</div>
 
-	<form id="settings-form" method="POST" bind:this={formElement}>
+	<form id="clear-baseline-form" method="POST" action="?/clearBaseline"></form>
+
+	<form id="settings-form" method="POST" action="?/updateSettings" bind:this={formElement}>
 		<h2>List <span class="subheader">(which stories shown)</span></h2>
 		{#each Object.entries(groupedFeeds) as [category, feeds]}
 			{#if category !== 'Curated'}
@@ -151,22 +147,28 @@
 
 		<h2>
 			Last visit <span class="subheader">(determines new item highlighting)</span>
+			<span
+				class="help-icon"
+				title="Stories published after your baseline time appear bold. By default, the baseline is automatically set to your previous visit time. During an active session (20 minutes of activity), your baseline stays the same so you can track new stories. You can manually override the baseline using the controls below."
+				>ⓘ</span
+			>
 		</h2>
 
-		{#if manualBaseline}
-			<div class="manual-baseline-info">
-				<span
-					>Manual baseline set: {formatVisitTime(manualBaseline)} ({relativeTimeAbbrev(
-						manualBaseline
-					)})</span
-				>
-				<button type="button" onclick={clearManualBaseline}>Clear (use automatic)</button>
-			</div>
-		{:else}
-			<div class="manual-baseline-info">
-				<span>Using automatic baseline (previous visit)</span>
-			</div>
-		{/if}
+		<div class="manual-baseline-info">
+			{#if manualBaseline}
+				<span class="baseline-status">
+					<strong>Current:</strong> Manual override
+					<span class="baseline-time"
+						>{formatVisitTime(manualBaseline)} ({relativeTimeAbbrev(manualBaseline)})</span
+					>
+				</span>
+				<button type="submit" form="clear-baseline-form">Reset to automatic</button>
+			{:else}
+				<span class="baseline-status">
+					<strong>Current:</strong> Automatic (resets to previous visit when session ends)
+				</span>
+			{/if}
+		</div>
 
 		<input
 			bind:this={datetimeInput}
@@ -175,7 +177,11 @@
 			value={defaultDatetime}
 			onchange={() => {
 				const timestamp = Math.floor(new Date(datetimeInput.value).getTime() / 1000);
+				datetimeTimestamp = timestamp;
 				setManualBaseline(timestamp);
+				if (datetimeInput) {
+					datetimeInput.name = 'custom_datetime';
+				}
 				autoSubmit();
 			}}
 		/>
@@ -194,7 +200,11 @@
 					checked={manualBaseline === visit}
 					onchange={() => {
 						setDatetimeFromVisit(visit);
+						datetimeTimestamp = visit;
 						setManualBaseline(visit);
+						if (datetimeInput) {
+							datetimeInput.name = '';
+						}
 						autoSubmit();
 					}}
 				/>
@@ -350,6 +360,7 @@
 	.manual-baseline-info {
 		display: flex;
 		align-items: center;
+		justify-content: space-between;
 		gap: var(--size-3);
 		margin-bottom: var(--size-3);
 		padding: var(--size-2) var(--size-3);
@@ -358,8 +369,26 @@
 		border-radius: 6px;
 	}
 
+	.baseline-status {
+		display: flex;
+		flex-direction: column;
+		gap: var(--size-1);
+	}
+
+	.baseline-time {
+		font-size: var(--font-size-0);
+		color: light-dark(#666, #999);
+	}
+
 	.manual-baseline-info button {
 		padding: var(--size-1) var(--size-2);
 		font-size: var(--font-size-0);
+	}
+
+	.help-icon {
+		font-size: var(--font-size-1);
+		color: light-dark(#999, #666);
+		cursor: help;
+		margin-left: var(--size-2);
 	}
 </style>

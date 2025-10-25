@@ -21,7 +21,7 @@ export const load: PageServerLoad = async ({ cookies, url }) => {
 };
 
 export const actions: Actions = {
-	default: async ({ request, cookies, url }) => {
+	updateSettings: async ({ request, cookies, url }) => {
 		const data = await request.formData();
 		const pagesPerLoad = data.get('pages_per_load');
 		const customDatetime = data.get('custom_datetime');
@@ -41,8 +41,9 @@ export const actions: Actions = {
 		const selectedFeed = data.get('feed') || url.searchParams.get('from') || 'hckrnews';
 		throw redirect(303, `/config?from=${selectedFeed}`);
 	},
-	clearBaseline: async ({ cookies }) => {
+	clearBaseline: async ({ cookies, url }) => {
 		cookies.delete('selected_baseline', { path: '/' });
-		return { success: true };
+		const selectedFeed = url.searchParams.get('from') || 'hckrnews';
+		throw redirect(303, `/config?from=${selectedFeed}`);
 	}
 };
