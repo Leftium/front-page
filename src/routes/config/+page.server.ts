@@ -7,12 +7,12 @@ const COOKIE_OPTIONS = {
 };
 
 export const load: PageServerLoad = async ({ cookies, url }) => {
-	const recent = cookies.get('visits_recent')?.split('-').map(Number) ?? [];
+	const visitHistory = cookies.get('visits_history')?.split('-').map(Number) ?? [];
 	const total = parseInt(cookies.get('visits_total') ?? '0', 10);
 	const selectedBaseline = cookies.get('selected_baseline');
 
 	return {
-		recent,
+		recent: visitHistory,
 		total,
 		source: url.searchParams.get('from') || 'hckrnews',
 		pagesPerLoad: parseInt(cookies.get('pages_per_load') ?? '1', 10),

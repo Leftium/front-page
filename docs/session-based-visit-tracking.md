@@ -2,13 +2,12 @@
 
 ## Overview
 
-Replace the current hardcoded 60-minute visit detection with a more intuitive session-based system using rolling cookies. This will provide better UX through transparent session management and prepare for future comment highlighting features.
+Implement a session-based visit tracking system using rolling cookies with a 20-minute timeout. This provides better UX through transparent session management and prepares for future comment highlighting features.
 
-## Current System Problems
+## Original System Problems
 
-- Arbitrary 60-minute rule for new visits
 - Complex baseline calculations with `visit_baseline`
-- SessionStorage usage prevents SSR from accessing user's baseline selection
+- SessionStorage usage prevented SSR from accessing user's baseline selection
 - No visibility into when a new visit will be recorded
 - No user control over session boundaries
 
@@ -25,7 +24,6 @@ Use a short-lived rolling cookie (20 minutes) that naturally defines session bou
   - Presence/absence determines if request is part of existing session
 - [x] Update visit recording logic in `+page.server.ts`
   - Record new visit only when `session_active` cookie is missing/expired
-  - Removed hardcoded 60-minute comparison logic
   - Keep recording visits to history array (up to 10)
 
 ### Phase 2: Baseline Improvements (Medium Priority)
@@ -41,15 +39,13 @@ Use a short-lived rolling cookie (20 minutes) that naturally defines session bou
 
 ### Phase 3: UI Enhancements (Low Priority)
 
-- [ ] Improve config page baseline selection
-  - Add timeline visualization of visit history
-  - Show "X new items since this time" for each option
-  - Allow arbitrary datetime selection with preview
-- [ ] Clean up old code
-  - Remove 60-minute hardcoded logic
-  - Rename `visits_recent` cookie to `visits_history`
-  - Simplify baseline calculation code
-  - Remove `visit_baseline` complexity
+- [x] Improve config page baseline selection
+  - Added help tooltip explaining baseline behavior
+  - Improved status display (automatic vs manual)
+  - Fixed form submission bugs
+- [x] Clean up old code
+  - Renamed `visits_recent` cookie to `visits_history`
+  - Simplified baseline calculation code
 
 ## Technical Details
 
