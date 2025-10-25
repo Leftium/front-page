@@ -286,10 +286,14 @@
 
 	.radio-group-horizontal label {
 		display: flex;
-		align-items: flex-start;
+		align-items: baseline;
 		gap: var(--size-2);
-		margin-bottom: var(--size-3);
+		margin-bottom: var(--size-1);
 		break-inside: avoid;
+	}
+
+	.radio-group-horizontal label input[type='radio'] {
+		flex-shrink: 0;
 	}
 
 	.feed-label {
@@ -307,6 +311,7 @@
 		color: light-dark(#999, #666);
 		white-space: normal;
 		line-height: 1.3;
+		min-height: calc(1.3em * 2);
 	}
 
 	.pages-header {
