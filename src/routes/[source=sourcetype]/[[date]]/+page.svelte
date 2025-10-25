@@ -1,11 +1,12 @@
 <script lang="ts">
 	import type { NormalizedStory } from '$lib/fetch-hckrnews';
-	import { FEED_NAMES } from '$lib';
+	import { FEED_NAMES, FEED_SOURCES } from '$lib';
 	let { data } = $props();
 	import 'open-props/style';
 	import dayjs from 'dayjs';
 
 	const cutoffTime = data.visitData?.previousSessionOverride ?? null;
+	const feedSource = $derived(FEED_SOURCES.find((f) => f.id === data.source));
 
 	function relativeTime(time: number | string): string {
 		const num = typeof time === 'string' ? parseInt(time, 10) : time;
@@ -157,18 +158,23 @@
 <main>
 	<d-item class="config-info new-item">
 		<a href="/config?from={data.source}">
-			<d-title><strong>List: {FEED_NAMES[data.source]}</strong></d-title>
-			{#if data.visitData}
-				<d-metadata>
+			<d-title>
+				<strong>{FEED_NAMES[data.source]}</strong>
+				{#if data.visitData}
 					{#if cutoffTime}
-						<span title={formatVisitTime(cutoffTime)}
-							>{data.newStoryCount} new (unread) {data.newStoryCount === 1 ? 'story' : 'stories'} since
-							{relativeTimeAbbrev(cutoffTime)}
-							<span style="white-space: nowrap;">(on this page)</span></span
+						{@const timeAgo = relativeTimeAbbrev(cutoffTime).replace(' ago', '')}
+						<span class="visit-count" title={formatVisitTime(cutoffTime)}
+							>({data.newStoryCount}
+							{data.newStoryCount === 1 ? 'story' : 'stories'} in last {timeAgo})</span
 						>
 					{:else}
-						<span>First visit</span>
+						<span class="visit-count">(First visit)</span>
 					{/if}
+				{/if}
+			</d-title>
+			{#if feedSource}
+				<d-metadata>
+					<span>{feedSource.description}</span>
 				</d-metadata>
 			{/if}
 		</a>
@@ -279,9 +285,15 @@
 		font-weight: var(--font-weight-4);
 		line-height: 1.2;
 		align-items: baseline;
+		gap: 1ch;
 
 		&.dead {
 			opacity: 0.3;
+		}
+
+		.visit-count {
+			font-weight: var(--font-weight-2);
+			font-size: 15px;
 		}
 	}
 
