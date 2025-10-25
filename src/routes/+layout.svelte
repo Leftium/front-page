@@ -71,6 +71,26 @@
 		});
 	}
 
+	function getOrdinalSuffix(n: number): string {
+		const lastDigit = n % 10;
+		const lastTwoDigits = n % 100;
+
+		if (lastTwoDigits >= 11 && lastTwoDigits <= 13) {
+			return 'th';
+		}
+
+		switch (lastDigit) {
+			case 1:
+				return 'st';
+			case 2:
+				return 'nd';
+			case 3:
+				return 'rd';
+			default:
+				return 'th';
+		}
+	}
+
 	async function endSession() {
 		document.cookie = 'new_item_threshold=; path=/; max-age=0';
 		document.cookie = 'session_start=; path=/; max-age=0';
@@ -150,13 +170,7 @@
 							<button onclick={endSession} class="end-session-btn">End session</button>
 							{#if data.visitData}
 								<div class="visits-text">
-									{data.visitData.total}{data.visitData.total === 1
-										? 'st'
-										: data.visitData.total === 2
-											? 'nd'
-											: data.visitData.total === 3
-												? 'rd'
-												: 'th'} visit
+									{data.visitData.total}{getOrdinalSuffix(data.visitData.total)} visit
 								</div>
 							{/if}
 						</li>
