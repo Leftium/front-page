@@ -7,7 +7,7 @@
 	let { data } = $props();
 
 	const currentSource = data?.source || 'hckrnews';
-	let manualOverride = $state<number | null>(data.selectedOverride);
+	let manualOverride = $state<number | null>(data?.selectedOverride ?? null);
 	let datetimeTimestamp = $state<number | null>(manualOverride);
 
 	let formElement: HTMLFormElement;
@@ -53,18 +53,24 @@
 		return `${years}y ago`;
 	}
 
-	const uniqueVisits = data.recent.toReversed().filter((visit, index, arr) => {
-		if (index === 0) return true;
-		const current = dayjs.unix(visit);
-		const prev = dayjs.unix(arr[index - 1]);
-		return !current.isSame(prev, 'minute');
-	});
+	const uniqueVisits = $derived(
+		(data?.recent ?? []).toReversed().filter((visit, index, arr) => {
+			if (index === 0) return true;
+			const current = dayjs.unix(visit);
+			const prev = dayjs.unix(arr[index - 1]);
+			return !current.isSame(prev, 'minute');
+		})
+	);
 
-	const currentlyUsing = manualOverride || (uniqueVisits.length > 1 ? uniqueVisits[1] : null);
+	const currentlyUsing = $derived(
+		manualOverride || (uniqueVisits.length > 1 ? uniqueVisits[1] : null)
+	);
 
-	const defaultDatetime = manualOverride
-		? dayjs.unix(manualOverride).format('YYYY-MM-DDTHH:mm')
-		: dayjs().format('YYYY-MM-DDTHH:mm');
+	const defaultDatetime = $derived(
+		manualOverride
+			? dayjs.unix(manualOverride).format('YYYY-MM-DDTHH:mm')
+			: dayjs().format('YYYY-MM-DDTHH:mm')
+	);
 
 	function autoSubmit() {
 		if (formElement) {

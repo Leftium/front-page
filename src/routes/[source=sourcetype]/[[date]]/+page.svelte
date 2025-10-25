@@ -182,7 +182,7 @@
 		</s-scroll>
 	</d-item>
 
-	{#each data.stories as story, index (story.id)}
+	{#each data.stories ?? [] as story, index (story.id)}
 		{@const globalIndex =
 			data.startIndex !== undefined ? data.startIndex + index : (data.startPage - 1) * 30 + index}
 		{@render storyItem(story, globalIndex, cutoffTime)}
@@ -213,7 +213,7 @@
 		</d-item>
 	{/if}
 
-	<pre hidden>{JSON.stringify(data.stories, null, 4)}</pre>
+	<pre hidden>{JSON.stringify(data.stories ?? [], null, 4)}</pre>
 </main>
 
 <style>
