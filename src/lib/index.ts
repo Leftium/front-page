@@ -26,6 +26,20 @@ export const FEED_SOURCES = [
 		available: true
 	},
 	{
+		id: 'top',
+		name: 'Top Stories',
+		description: '/news',
+		category: 'Hacker News',
+		available: true
+	},
+	{
+		id: 'new',
+		name: 'New Stories',
+		description: '/new',
+		category: 'Hacker News',
+		available: true
+	},
+	{
 		id: 'show',
 		name: 'Show HN',
 		description: '/show',
@@ -36,20 +50,6 @@ export const FEED_SOURCES = [
 		id: 'ask',
 		name: 'Ask HN',
 		description: '/ask',
-		category: 'Hacker News',
-		available: true
-	},
-	{
-		id: 'top',
-		name: 'Top Stories',
-		description: '/top',
-		category: 'Hacker News',
-		available: true
-	},
-	{
-		id: 'new',
-		name: 'New Stories',
-		description: '/new',
 		category: 'Hacker News',
 		available: true
 	},
