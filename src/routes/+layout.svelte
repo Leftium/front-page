@@ -146,6 +146,17 @@
 								{/if}
 							</div>
 							<button onclick={endSession} class="end-session-btn">End session</button>
+							{#if data.visitData}
+								<div class="visits-text">
+									{data.visitData.total}{data.visitData.total === 1
+										? 'st'
+										: data.visitData.total === 2
+											? 'nd'
+											: data.visitData.total === 3
+												? 'rd'
+												: 'th'} visit
+								</div>
+							{/if}
 						</li>
 					{/if}
 				</ul>
@@ -229,6 +240,12 @@
 	.session-text {
 		color: light-dark(#666, #999);
 		font-size: var(--font-size-1);
+	}
+
+	.visits-text {
+		color: light-dark(#666, #999);
+		font-size: var(--font-size-1);
+		margin-top: var(--size-2);
 	}
 
 	.end-session-btn {

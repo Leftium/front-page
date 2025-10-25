@@ -158,15 +158,11 @@
 	<d-item class="config-info new-item">
 		<a href="/config?from={data.source}">
 			<d-title><strong>List: {FEED_NAMES[data.source]}</strong></d-title>
-			{#if data.visitData}
+			{#if data.visitData && cutoffTime}
 				<d-metadata>
-					{#if cutoffTime}
-						<span title={formatVisitTime(cutoffTime)}
-							>Last visit: {relativeTimeAbbrev(cutoffTime)} (total: {data.visitData.total})</span
-						>
-					{:else}
-						<span>Last visit: First visit! (total: {data.visitData.total})</span>
-					{/if}
+					<span title={formatVisitTime(cutoffTime)}
+						>Last visit: {relativeTimeAbbrev(cutoffTime)}</span
+					>
 				</d-metadata>
 			{/if}
 		</a>
