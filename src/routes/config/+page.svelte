@@ -127,7 +127,10 @@
 							disabled={!feed.available}
 							onchange={autoSubmit}
 						/>
-						{feed.name}
+						<span class="feed-label">
+							<span class="feed-name">{feed.name}</span>
+							<span class="feed-description">{feed.description}</span>
+						</span>
 					</label>
 				{/each}
 			</div>
@@ -282,10 +285,28 @@
 	}
 
 	.radio-group-horizontal label {
-		display: block;
-		margin-bottom: var(--size-1);
-		white-space: nowrap;
+		display: flex;
+		align-items: flex-start;
+		gap: var(--size-2);
+		margin-bottom: var(--size-3);
 		break-inside: avoid;
+	}
+
+	.feed-label {
+		display: flex;
+		flex-direction: column;
+		gap: var(--size-0);
+	}
+
+	.feed-name {
+		white-space: nowrap;
+	}
+
+	.feed-description {
+		font-size: var(--font-size-0);
+		color: light-dark(#999, #666);
+		white-space: normal;
+		line-height: 1.3;
 	}
 
 	.pages-header {

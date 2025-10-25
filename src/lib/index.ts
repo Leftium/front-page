@@ -18,20 +18,116 @@ export const FEED_NAMES: Record<string, string> = {
 };
 
 export const FEED_SOURCES = [
-	{ id: 'hckrnews', name: 'HckrNews', category: 'Curated', available: true },
-	{ id: 'show', name: 'Show HN', category: 'Hacker News', available: true },
-	{ id: 'ask', name: 'Ask HN', category: 'Hacker News', available: true },
-	{ id: 'top', name: 'Top Stories', category: 'Hacker News', available: true },
-	{ id: 'new', name: 'New Stories', category: 'Hacker News', available: true },
-	{ id: 'best', name: 'Best Stories', category: 'Hacker News', available: true },
-	{ id: 'jobs', name: 'Jobs', category: 'Hacker News', available: true },
-	{ id: 'shownew', name: 'Show New', category: 'More lists', available: true },
-	{ id: 'asknew', name: 'Ask New', category: 'More lists', available: true },
-	{ id: 'pool', name: 'Pool', category: 'More lists', available: true },
-	{ id: 'invited', name: 'Invited', category: 'More lists', available: true },
-	{ id: 'noobstories', name: 'Noob Stories', category: 'More lists', available: true },
-	{ id: 'classic', name: 'Classic', category: 'More lists', available: true },
-	{ id: 'launches', name: 'Launches', category: 'More lists', available: true },
-	{ id: 'active', name: 'Active', category: 'More lists', available: false },
-	{ id: 'bestcomments', name: 'Best Comments', category: 'More lists', available: false }
+	{
+		id: 'hckrnews',
+		name: 'HckrNews',
+		description: 'Chronological list of items that made it to HN homepage',
+		category: 'Curated',
+		available: true
+	},
+	{
+		id: 'show',
+		name: 'Show HN',
+		description: '/show',
+		category: 'Hacker News',
+		available: true
+	},
+	{
+		id: 'ask',
+		name: 'Ask HN',
+		description: '/ask',
+		category: 'Hacker News',
+		available: true
+	},
+	{
+		id: 'top',
+		name: 'Top Stories',
+		description: '/top',
+		category: 'Hacker News',
+		available: true
+	},
+	{
+		id: 'new',
+		name: 'New Stories',
+		description: '/new',
+		category: 'Hacker News',
+		available: true
+	},
+	{
+		id: 'best',
+		name: 'Best Stories',
+		description: '/best',
+		category: 'Hacker News',
+		available: true
+	},
+	{
+		id: 'jobs',
+		name: 'Jobs',
+		description: '/jobs',
+		category: 'Hacker News',
+		available: true
+	},
+	{
+		id: 'shownew',
+		name: 'Show New',
+		description: 'The newest Show HN posts',
+		category: 'More lists',
+		available: true
+	},
+	{
+		id: 'asknew',
+		name: 'Ask New',
+		description: 'The newest Ask HN (text) posts',
+		category: 'More lists',
+		available: true
+	},
+	{
+		id: 'pool',
+		name: 'Pool',
+		description: 'Links selected for a second chance at the front page',
+		category: 'More lists',
+		available: true
+	},
+	{
+		id: 'invited',
+		name: 'Invited',
+		description: 'Overlooked links, invited to repost',
+		category: 'More lists',
+		available: true
+	},
+	{
+		id: 'noobstories',
+		name: 'Noob Stories',
+		description: 'Submissions from new accounts',
+		category: 'More lists',
+		available: true
+	},
+	{
+		id: 'classic',
+		name: 'Classic',
+		description: 'Frontpage as voted by ancient accounts',
+		category: 'More lists',
+		available: true
+	},
+	{
+		id: 'launches',
+		name: 'Launches',
+		description: 'Launches of YC startups',
+		category: 'More lists',
+		available: true
+	},
+	{
+		id: 'active',
+		name: 'Active',
+		description: 'Most active current discussions',
+		category: 'More lists',
+		available: false
+	},
+	{
+		id: 'bestcomments',
+		name: 'Best Comments',
+		description: 'Highest-voted recent comments',
+		category: 'More lists',
+		available: false
+	}
 ];
