@@ -77,7 +77,7 @@ export const FEED_SOURCES = [
 	{
 		id: 'asknew',
 		name: 'Ask New',
-		description: 'The newest Ask HN (text) posts',
+		description: 'The newest Ask HN posts',
 		category: 'More lists',
 		available: true
 	},
