@@ -163,7 +163,8 @@
 					{#if cutoffTime}
 						<span title={formatVisitTime(cutoffTime)}
 							>{data.newStoryCount} new (unread) {data.newStoryCount === 1 ? 'story' : 'stories'} since
-							{relativeTimeAbbrev(cutoffTime)} (on this page)</span
+							{relativeTimeAbbrev(cutoffTime)}
+							<span style="white-space: nowrap;">(on this page)</span></span
 						>
 					{:else}
 						<span>First visit</span>
