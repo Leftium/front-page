@@ -44,22 +44,22 @@ export const actions: Actions = {
 	updateSettings: async ({ request, cookies, url }) => {
 		const data = await request.formData();
 		const pagesPerLoad = data.get('pages_per_load');
+		const thresholdSource = data.get('threshold_source');
 		const customDatetime = data.get('custom_datetime');
-		const overrideDisplay = data.get('override_display');
 
 		if (pagesPerLoad) {
 			cookies.set('pages_per_load', pagesPerLoad.toString(), COOKIE_OPTIONS);
 		}
 
-		if (customDatetime) {
+		if (thresholdSource === 'custom' && customDatetime) {
 			const timestamp = Math.floor(new Date(customDatetime.toString()).getTime() / 1000);
 			cookies.set('new_item_threshold', timestamp.toString(), {
 				path: '/',
 				maxAge: 20 * 60,
 				httpOnly: false
 			});
-		} else if (overrideDisplay) {
-			cookies.set('new_item_threshold', overrideDisplay.toString(), {
+		} else if (thresholdSource && thresholdSource !== 'custom') {
+			cookies.set('new_item_threshold', thresholdSource.toString(), {
 				path: '/',
 				maxAge: 20 * 60,
 				httpOnly: false

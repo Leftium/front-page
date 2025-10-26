@@ -168,17 +168,31 @@
 
 		<label class="custom-time-label">
 			<input
+				type="radio"
+				name="threshold_source"
+				value="custom"
+				checked={datetimeTimestamp !== null && !uniqueVisits.includes(datetimeTimestamp)}
+				onchange={() => {
+					const timestamp = Math.floor(new Date(datetimeInput.value).getTime() / 1000);
+					datetimeTimestamp = timestamp;
+					setManualOverride(timestamp);
+					autoSubmit();
+				}}
+			/>
+			<input
 				bind:this={datetimeInput}
 				type="datetime-local"
 				name="custom_datetime"
 				value={defaultDatetime}
 				onchange={() => {
+					// Select the radio button when datetime changes
+					const radio = datetimeInput.parentElement?.querySelector(
+						'input[type="radio"]'
+					) as HTMLInputElement;
+					if (radio) radio.checked = true;
 					const timestamp = Math.floor(new Date(datetimeInput.value).getTime() / 1000);
 					datetimeTimestamp = timestamp;
 					setManualOverride(timestamp);
-					if (datetimeInput) {
-						datetimeInput.name = 'custom_datetime';
-					}
 					autoSubmit();
 				}}
 			/>
@@ -194,16 +208,13 @@
 			<label>
 				<input
 					type="radio"
-					name="override_display"
+					name="threshold_source"
 					value={visit}
 					checked={currentlyUsing === visit}
 					onchange={() => {
 						setDatetimeFromVisit(visit);
 						datetimeTimestamp = visit;
 						setManualOverride(visit);
-						if (datetimeInput) {
-							datetimeInput.name = '';
-						}
 						autoSubmit();
 					}}
 				/>
