@@ -10,9 +10,26 @@ export const load: PageServerLoad = async ({ cookies, url }) => {
 	const visitHistory = cookies.get('visits_history')?.split('-').map(Number) ?? [];
 	const total = parseInt(cookies.get('visits_total') ?? '0', 10);
 	const thresholdCookie = cookies.get('new_item_threshold');
+	const sessionStartCookie = cookies.get('session_start');
 
 	const previousSession = visitHistory.length > 1 ? visitHistory[visitHistory.length - 2] : null;
 	const isOverridden = thresholdCookie && parseInt(thresholdCookie, 10) !== previousSession;
+
+	if (thresholdCookie) {
+		cookies.set('new_item_threshold', thresholdCookie, {
+			path: '/',
+			maxAge: 20 * 60,
+			httpOnly: false
+		});
+	}
+
+	if (sessionStartCookie) {
+		cookies.set('session_start', sessionStartCookie, {
+			path: '/',
+			maxAge: 20 * 60,
+			httpOnly: false
+		});
+	}
 
 	return {
 		recent: visitHistory,
