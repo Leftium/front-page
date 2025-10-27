@@ -21,49 +21,49 @@ export const FEED_SOURCES = [
 	{
 		id: 'hckrnews',
 		name: 'HckrNews',
-		description: 'Chronological list of items that made it to HN homepage',
+		description: 'All HN frontpage stories in chronological order',
 		category: 'Curated',
 		available: true
 	},
 	{
 		id: 'top',
 		name: 'Top Stories',
-		description: '/news',
+		description: 'HN /news',
 		category: 'Hacker News',
 		available: true
 	},
 	{
 		id: 'new',
 		name: 'New Stories',
-		description: '/new',
+		description: 'HN /new',
 		category: 'Hacker News',
 		available: true
 	},
 	{
 		id: 'show',
 		name: 'Show HN',
-		description: '/show',
+		description: 'HN /show',
 		category: 'Hacker News',
 		available: true
 	},
 	{
 		id: 'ask',
 		name: 'Ask HN',
-		description: '/ask',
+		description: 'HN /ask',
 		category: 'Hacker News',
 		available: true
 	},
 	{
 		id: 'best',
 		name: 'Best Stories',
-		description: '/best',
+		description: 'HN /best',
 		category: 'Hacker News',
 		available: true
 	},
 	{
 		id: 'jobs',
 		name: 'Jobs',
-		description: '/jobs',
+		description: 'HN /jobs',
 		category: 'Hacker News',
 		available: true
 	},
