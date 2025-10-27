@@ -50,7 +50,7 @@ export async function fetchHckrnews(
 
 	const stories: NormalizedStory[] = json.map((item) => ({
 		id: item.id,
-		title: item.dead ? 'DEAD' : item.link_text,
+		title: item.dead ? '[dead]' : item.link_text,
 		url: item.link,
 		domain: item.source?.replace(/^(www.)?/, ''),
 		points: item.points,
