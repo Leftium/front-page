@@ -166,7 +166,7 @@
 
 		<h3>
 			Set unread story date <span class="subheader"
-				>(Resets to last visit after session timeout)</span
+				>(resets to last visit after session timeout)</span
 			>
 		</h3>
 
