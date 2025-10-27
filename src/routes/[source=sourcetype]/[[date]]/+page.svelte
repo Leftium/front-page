@@ -252,6 +252,16 @@
 			border-left-color: rgba(255, 102, 0, 0.8);
 		}
 
+		&.config-info {
+			background: light-dark(#f8f8f8, #1f1f1f);
+			border-left-color: light-dark(#ddd, #444);
+		}
+
+		&.config-info:hover {
+			background: light-dark(#f0f0f0, #252525);
+			border-left-color: light-dark(#ccc, #555);
+		}
+
 		&.config-info d-title,
 		&.config-info d-metadata {
 			text-align: center;
