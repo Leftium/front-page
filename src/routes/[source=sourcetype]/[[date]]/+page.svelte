@@ -1,12 +1,22 @@
 <script lang="ts">
 	import type { NormalizedStory } from '$lib/fetch-hckrnews';
 	import { FEED_NAMES, FEED_SOURCES } from '$lib';
+	import { onMount } from 'svelte';
 	let { data } = $props();
 	import 'open-props/style';
 	import dayjs from 'dayjs';
 
 	const cutoffTime = data.visitData?.previousSessionOverride ?? null;
 	const feedSource = $derived(FEED_SOURCES.find((f) => f.id === data.source));
+
+	onMount(() => {
+		document.querySelectorAll('a[href="#"]').forEach((link) => {
+			link.addEventListener('click', (e) => {
+				e.preventDefault();
+				window.scrollTo({ top: 0, behavior: 'smooth' });
+			});
+		});
+	});
 
 	function relativeTime(time: number | string): string {
 		const num = typeof time === 'string' ? parseInt(time, 10) : time;
@@ -178,14 +188,11 @@
 				</d-metadata>
 			{/if}
 		</a>
-		<s-scroll
-			class="new"
-			onclick={(e: MouseEvent) => {
-				window.location.href = `/config?from=${data.source}`;
-			}}
-		>
-			<s-config>⚙</s-config>
-		</s-scroll>
+		<a href="/config?from={data.source}" class="scroll-link">
+			<s-scroll class="new">
+				<s-config>⚙</s-config>
+			</s-scroll>
+		</a>
 	</d-item>
 
 	{#each data.stories ?? [] as story, index (story.id)}
@@ -209,13 +216,11 @@
 					</d-metadata>
 				</a>
 			{/if}
-			<s-scroll
-				onclick={(e: MouseEvent) => {
-					window.scrollTo({ top: 0, behavior: 'smooth' });
-				}}
-			>
-				<s-top-icon>⤒</s-top-icon>
-			</s-scroll>
+			<a href="#" class="scroll-link">
+				<s-scroll>
+					<s-top-icon>⤒</s-top-icon>
+				</s-scroll>
+			</a>
 		</d-item>
 	{/if}
 
@@ -416,6 +421,12 @@
 		opacity: 0.6;
 	}
 
+	.scroll-link {
+		display: contents;
+		color: inherit;
+		text-decoration: none;
+	}
+
 	s-scroll {
 		display: flex;
 		grid-column: 2;
@@ -449,7 +460,8 @@
 		opacity: 0.5;
 	}
 
-	s-scroll:hover s-config {
+	s-scroll:hover s-config,
+	.scroll-link:hover s-config {
 		opacity: 0.8;
 	}
 
@@ -458,7 +470,8 @@
 		opacity: 0.5;
 	}
 
-	s-scroll:hover s-top-icon {
+	s-scroll:hover s-top-icon,
+	.scroll-link:hover s-top-icon {
 		opacity: 0.8;
 	}
 
