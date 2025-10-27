@@ -159,9 +159,9 @@
 		<h2>Unread stories</h2>
 
 		<p class="explanation">
-			Stories newer than {#if currentlyUsing}{formatVisitTime(currentlyUsing)} ({relativeTimeAbbrev(
-					currentlyUsing
-				)}){:else}this time{/if} marked as unread.
+			Stories newer than {#if currentlyUsing}<span class="timestamp-highlight"
+					>{formatVisitTime(currentlyUsing)} ({relativeTimeAbbrev(currentlyUsing)})</span
+				>{:else}this time{/if} marked as unread.
 		</p>
 
 		<h3>
@@ -413,6 +413,14 @@
 		margin-top: var(--size-2);
 		margin-bottom: var(--size-3);
 		line-height: 1.6;
+	}
+
+	.timestamp-highlight {
+		font-weight: var(--font-weight-6);
+		background: light-dark(rgba(255, 102, 0, 0.1), rgba(255, 102, 0, 0.15));
+		padding: var(--size-1) var(--size-2);
+		border-radius: 4px;
+		color: light-dark(#ff6600, #ff6600);
 	}
 
 	.reset-button {
