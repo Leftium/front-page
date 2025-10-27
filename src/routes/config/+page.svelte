@@ -156,15 +156,17 @@
 			</div>
 		</div>
 
-		<h2>New (unread) stories</h2>
+		<h2>Unread stories</h2>
 
 		<p class="explanation">
 			Stories newer than {#if currentlyUsing}{formatVisitTime(currentlyUsing)} ({relativeTimeAbbrev(
 					currentlyUsing
-				)}){:else}this time{/if} get orange unread mark.
+				)}){:else}this time{/if} marked as unread.
 		</p>
 
-		<h3>Change when stories were last read:</h3>
+		<h3>
+			Set unread story date <span class="subheader">(Resets to default at end of session)</span>
+		</h3>
 
 		<label class="custom-time-label">
 			<input
