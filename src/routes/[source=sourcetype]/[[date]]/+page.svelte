@@ -109,6 +109,7 @@
 {#snippet storyItem(story: NormalizedStory, index: number, cutoff: number | null)}
 	{@const id = story.id}
 	{@const dead = story.dead}
+	{@const deleted = story.title === '[deleted]'}
 	{@const title = story.title}
 
 	{@const points = story.points}
@@ -132,7 +133,7 @@
 
 	<d-item class:new-item={isNew}>
 		<a href={link}>
-			<d-title class:dead>{title}</d-title>
+			<d-title class:dead={dead || deleted}>{title}</d-title>
 			<d-metadata>
 				<s-points class:high={points >= 100} class:mid={points >= 50 && points < 100}
 					>{points} {@render upvote()}</s-points
