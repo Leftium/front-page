@@ -139,7 +139,7 @@
 		<hr />
 
 		<div class="pages-header">
-			<h2>Items per page</h2>
+			<h2>Stories per page</h2>
 			<div class="radio-group-inline">
 				{#each [1, 2, 3, 4] as pages}
 					<label>
@@ -165,7 +165,9 @@
 		</p>
 
 		<h3>
-			Set unread story date <span class="subheader">(Resets to default at end of session)</span>
+			Set unread story date <span class="subheader"
+				>(Resets to last visit after session timeout)</span
+			>
 		</h3>
 
 		<label class="custom-time-label">
