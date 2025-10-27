@@ -1,8 +1,8 @@
 # HN Reader
 
 Try it out:
-- [hn.leftium.com](https://hn.leftium.com) (All frontpage stories, in chronological order)
-- [hn.leftium.com/top](https://hn.leftium.com/top) (If you prefer HN's default order)
+- [hn.leftium.com](https://hn.leftium.com) (all frontpage stories, in chronological order)
+- [hn.leftium.com/top](https://hn.leftium.com/top) (if you prefer HN's default order)
 
 <img width="706" height="529" alt="image" src="https://github.com/user-attachments/assets/792f56f1-4c60-4968-88f0-59ccc81bd92d" />
 
