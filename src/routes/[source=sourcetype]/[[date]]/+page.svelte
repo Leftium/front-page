@@ -135,11 +135,11 @@
 		<a href={link}>
 			<d-title class:dead={dead || deleted}>{title}</d-title>
 			<d-metadata>
-				<s-points class:high={points >= 100} class:mid={points >= 50 && points < 100}
-					>{points} {@render upvote()}</s-points
-				>
 				<s-comments class:high={comments >= 100} class:mid={comments >= 50 && comments < 100}
 					>{dead ? '?' : comments} {@render message()}</s-comments
+				>
+				<s-points class:high={points >= 100} class:mid={points >= 50 && points < 100}
+					>{points} {@render upvote()}</s-points
 				>
 				<s-time>{relativeTime(time)}</s-time>
 				{#if timeFrontpage}
